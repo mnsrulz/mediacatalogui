@@ -52,7 +52,7 @@ function getToken() {
   const tokenString = sessionStorage.getItem('token');
   const userToken = JSON.parse(tokenString);
 
-  if (userToken && new Date(userToken.tokenObj.expires_at) > new Date()) {
+  if (userToken?.tokenObj?.expires_at && new Date(userToken.tokenObj.expires_at) > new Date()) {
     return userToken;
   }
 }
