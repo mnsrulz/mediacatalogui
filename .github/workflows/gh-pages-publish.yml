@@ -23,7 +23,7 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
           SSH: true
-          REPOSITORY_NAME: mnsrulz/mediacatalogui.github.io
+          REPOSITORY_NAME: mnsrulz/mnsrulz.github.io
           BRANCH: gh-pages # The branch the action should deploy to.
           FOLDER: build # The folder the action should deploy.
           CLEAN: true # Automatically remove deleted files from the deploy branch
