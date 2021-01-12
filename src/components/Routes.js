@@ -1,6 +1,7 @@
 import Dashboard from './Dashboard/Dashboard';
 import Preferences from './Preferences/Preferences';
 import MediaDirectory from './MediaDirectory/MediaDirectory';
+import RemoteUrlUpload from './RemoteUrlUpload/RemoteUrlUpload';
 
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
@@ -25,6 +26,12 @@ const Routes = [
         component: MediaDirectory,
         icon: ShoppingCartIcon
     },
+    {
+        path: '/remoteuploads',
+        sidebarName: 'Remote Url Upload',
+        component: RemoteUrlUpload,
+        icon: ShoppingCartIcon
+    }
 
 ];
 
