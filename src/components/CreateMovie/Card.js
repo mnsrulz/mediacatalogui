@@ -8,7 +8,7 @@ import { makeStyles, rgbToHex, withStyles } from '@material-ui/core/styles';
 let numeral = require('numeral');
 let backdropIMG;
 
-const useStyles = makeStyles(theme => ({    
+const useStyles = makeStyles(theme => ({
     card: {
         marginTop: '20px',
         display: 'flex',
@@ -20,11 +20,18 @@ const useStyles = makeStyles(theme => ({
     },
     content: {
         flex: '1 0 auto',
-        color: 'white'
+        color: 'white',
+        backgroundImage: 'linear-gradient(rgba(0,0,0,.85) 15%,rgba(0,0,0,.2) 40%,#000 90%)',
+        minHeight: '500px'
     },
-    poster: {
-        width: '100%',
-        height: '480px'
+    posterContainer: {
+        textAlign: 'center'
+    },
+    poster: {        
+        width: '120px',
+        [theme.breakpoints.up('md')]:{
+            width: '200px'
+        }
     },
     tagline: {
         display: 'block',
@@ -73,13 +80,13 @@ export default function MovCard({ data, test }) {
         posterIMG = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSols5HZxlQWyS9JY5d3_L9imbk0LiziHiyDtMZLHt_UNzoYUXs2g';
     }
 
+    const styleofbg = `url(${backdropIMG})`;
+
     return (
         <div>
-            {test}
             <Card className={classes.card}>
-                <div className={classes.details}>
+                <div className={classes.details} style={{ backgroundImage: styleofbg }}>
                     <CardContent className={classes.content}>
-
                         <Typography component="h3" variant="h3">
                             {data.original_title}
                         </Typography>
@@ -87,24 +94,29 @@ export default function MovCard({ data, test }) {
                             {data.tagline}
                         </Typography>
                         <Typography variant="subtitle1">
-                            {data.overview}
-                        </Typography>
-
-                        <Typography variant="subtitle1">
-                            <Grid container className={classes.additionalDetails}>
-                                <Grid item xs={6}>
-                                    Original Release: <span className={classes.metadata}>{data.release}</span>
-                                Box Office: <span className={classes.metadata}>{totalRevenue}</span>
-                                </Grid>
-                                <Grid item xs={6}>
-                                    Running Time: <span className={classes.metadata}>{data.runtime} mins</span>
+                            <Grid container>
+                                <Grid item xs={9}>
+                                    {data.overview}
+                                    <Grid container className={classes.additionalDetails}>
+                                        <Grid item md={3}>
+                                            Original Release: <span className={classes.metadata}>{data.release}</span>
+                                    Box Office: <span className={classes.metadata}>{totalRevenue}</span>
+                                        </Grid>
+                                        <Grid item md={3}>
+                                            Running Time: <span className={classes.metadata}>{data.runtime} mins</span>
                                 Rating: <span className={classes.metadata}>{rating}</span>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                                <Grid item xs={3} className={classes.posterContainer}>
+                                    <img src={posterIMG} className={classes.poster}></img>
+                                    {/* <CardMedia image={posterIMG} title={data.original_title} className={classes.poster} /> */}
                                 </Grid>
                             </Grid>
                         </Typography>
                     </CardContent>
                 </div>
-                <CardMedia image={posterIMG} title={data.original_title} className={classes.poster} />
+                {/* <CardMedia image={posterIMG} title={data.original_title} className={classes.poster} /> */}
             </Card>
         </div>
     );
