@@ -13,7 +13,7 @@ class myComponent extends React.Component {
 
     async componentDidMount() {
         var headers = new Headers();
-        const idToken = JSON.parse(sessionStorage.token).tokenId;
+        const idToken = JSON.parse(localStorage.token).tokenId;
         headers.append('Authorization', 'Bearer ' + idToken);
         const apiUrl = 'https://mediacatalog.netlify.app/.netlify/functions/server/remoteUrlUploadRequest';
         const response = await fetch(apiUrl, { headers: headers });

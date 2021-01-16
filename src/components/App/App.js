@@ -31,12 +31,14 @@ import NotFound from '../NotFound/NotFound';
 
 import Routes from '../Routes';
 
+import useToken from './useToken';
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+        Media Catalog UI
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -44,18 +46,6 @@ function Copyright() {
   );
 }
 
-function setToken(userToken) {
-  sessionStorage.setItem('token', JSON.stringify(userToken));
-}
-
-function getToken() {
-  const tokenString = sessionStorage.getItem('token');
-  const userToken = JSON.parse(tokenString);
-
-  if (userToken?.tokenObj?.expires_at && new Date(userToken.tokenObj.expires_at) > new Date()) {
-    return userToken;
-  }
-}
 
 const drawerWidth = 240;
 
@@ -139,8 +129,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function App() {
-  // const [token, setToken] = useState();
-  const token = getToken();
+  const { token, setToken } = useToken();
+
   const classes = useStyles();
 
   const [open, setOpen] = React.useState(true);
@@ -173,11 +163,6 @@ function App() {
             <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
               Media Catalog Admin
           </Typography>
-            {/* <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton> */}
           </Toolbar>
         </AppBar>
         <BrowserRouter>
@@ -198,20 +183,20 @@ function App() {
             <div className={classes.appBarSpacer} />
             <Container maxWidth="lg" className={classes.container}>
               <Switch>
-              <Route
-                exact
-                path="/"
-                render={() => {
-                    return (                      
-                      <Redirect to="/dashboard" />                      
+                <Route
+                  exact
+                  path="/"
+                  render={() => {
+                    return (
+                      <Redirect to="/dashboard" />
                     )
-                }}
-              />
+                  }}
+                />
                 {Routes.map((prop, key) => {
                   return (
-                    <Route path={prop.path}>
+                    <Route path={prop.path} key={key}>
                       <prop.component />
-                    </Route>                    
+                    </Route>
                   );
                 })}
                 <Route>
