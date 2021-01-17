@@ -1,6 +1,6 @@
 import React from 'react';
-import MUIDataTable from "mui-datatables";
 
+import MUIDataTable from "mui-datatables";
 class myComponent extends React.Component {
     constructor(props) {
         super(props);

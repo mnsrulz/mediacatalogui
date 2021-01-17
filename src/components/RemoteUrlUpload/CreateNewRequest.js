@@ -1,7 +1,9 @@
-import {React, useState} from 'react';
+import { React, useState } from 'react';
 import { useForm, Controller, FormProvider } from 'react-hook-form';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Button from "@material-ui/core/Button";
+import ChooseFilesToUpload from './CreateNewRequest/ChooseFilesToUpload';
+import ChooseFilesToUploadFinalStep from './CreateNewRequest/FinalStep';
 
 import { FormHelperText, TextField, InputLabel, Input, FormControl, Paper, Grid, Typography, Stepper, Step, StepLabel, StepContent } from '@material-ui/core';
 
@@ -24,57 +26,44 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function getSteps() {
-    return ['Enter the URL', 'Choose Files to Upload', 'Finish'];
+    return ['Enter a zip file URL', 'Choose Files to Upload', 'Finish'];
 }
 
 
-export default function App() {    
+export default function App() {
     const { control, register, handleSubmit, errors } = useForm();
     const onSubmit = data => { alert('hello'); console.log(data); }
 
     const classes = useStyles();
 
     const [activeStep, setActiveStep] = useState(0);
-    const [fileUrl, setFileUrl] = useState('');
-    
-    const handleInputChange = (event)=> {
-        const target = event.target;            
-        this.setState({
-          [target.name]: target.value
-        });
-    }
+    const [zipFileUrl, setZipFileUrl] = useState('');
+    const [selectedFiles, setSelectedFiles] = useState([]);
+
+    const handleChange = (e) => {
+        setZipFileUrl(e.target.value);
+    };
+
+    const handleFileSelection = (e) => {
+        setSelectedFiles(e);
+    };
 
     const steps = getSteps();
 
-    function getStepContent(step) {
+    function getStepContent(step) {        
         switch (step) {
             case 0:
-                return <TextField name="fileUrl" type="URL" value={fileUrl} fullWidth onChange={handleInputChange} />;
+                return <TextField name="fileUrl" type="URL" defaultValue={zipFileUrl} fullWidth onChange={handleChange} />;
             case 1:
-                return fileUrl;
+                return <ChooseFilesToUpload defaultZipFileUrl={zipFileUrl} onSelectionChange={handleFileSelection} />;
             case 2:
-                return `Try out different ad text to see what brings in the most customers,
-                    and learn how to enhance your ads using features like ad extensions.
-                    If you run into any problems with your ads, find out how to tell if
-                    they're running and how to resolve approval issues.`;
+                return <ChooseFilesToUploadFinalStep selectedFiles={selectedFiles} zipFileUrl = {zipFileUrl} />;
             default:
-                return 'Unknown step';
+                return 'unknown step'
         }
     }
-    
 
-    const handleNext = () => {
-
-        switch (activeStep) {
-            case 0:
-                setFileUrl()
-                alert('checking url');
-                break;    
-            default:
-                alert('unknown step');
-                break;
-        }
-
+    const handleNext = () => {        
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
 

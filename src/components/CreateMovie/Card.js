@@ -17,6 +17,8 @@ const useStyles = makeStyles(theme => ({
     details: {
         display: 'flex',
         flexDirection: 'column',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat'
     },
     content: {
         flex: '1 0 auto',
