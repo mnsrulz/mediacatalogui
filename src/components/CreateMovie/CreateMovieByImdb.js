@@ -46,10 +46,7 @@ class myComponent extends Component {
                 backdrop: data.backdrop_path
             })
         })
-
-        // .catch((err) => console.log('Movie not found!'))
-
-    } // end function
+    }
 
     findMovieIdByImdbId = async (v) => {
         const imdbMovieApiUrl = `https://api.themoviedb.org/3/find/${v}?&api_key=cfe422613b250f702980a3bbf9e90716&external_source=imdb_id`;
@@ -64,54 +61,15 @@ class myComponent extends Component {
         const movieID = await this.findMovieIdByImdbId(imdbId);
         if (movieID) {
             let url = `https://api.themoviedb.org/3/movie/${movieID}?&api_key=cfe422613b250f702980a3bbf9e90716`
-            // let url = `https://api.themoviedb.org/3/find/${imdbId}?&api_key=cfe422613b250f702980a3bbf9e90716&external_source=imdb_id`
             this.fetchApi(url);
         }
-    } // end function
+    }
 
     async componentDidMount() {        
         const movieID = await this.findMovieIdByImdbId(this.state.imdbId);
-
         let url = `https://api.themoviedb.org/3/movie/${movieID}?&api_key=cfe422613b250f702980a3bbf9e90716`
-        //let url = `https://api.themoviedb.org/3/find/${this.state.imdbId}?&api_key=cfe422613b250f702980a3bbf9e90716&external_source=imdb_id`
         this.fetchApi(url)
-
-        //========================= BLOODHOUND ==============================//
-        // let suggests = new Bloodhound({
-        //     datumTokenizer: function (datum) {
-        //         return Bloodhound.tokenizers.whitespace(datum.value);
-        //     },
-        //     queryTokenizer: Bloodhound.tokenizers.whitespace,
-        //     remote: {
-        //         url: 'https://api.themoviedb.org/3/search/movie?query=%QUERY&api_key=cfe422613b250f702980a3bbf9e90716',
-        //         filter: function (movies) {
-        //             // Map the remote source JSON array to a JavaScript object array
-        //             return $.map(movies.results, function (movie) {
-        //                 return {
-        //                     value: movie.original_title, // search original title
-        //                     id: movie.id // get ID of movie simultaniously
-        //                 };
-        //             });
-        //         } // end filter
-        //     } // end remote
-        // }); // end new Bloodhound
-
-        // suggests.initialize(); // initialise bloodhound suggestion engine
-
-        //========================= END BLOODHOUND ==============================//
-
-        //========================= TYPEAHEAD ==============================//
-        // Instantiate the Typeahead UI
-        // $('.typeahead').typeahead({
-        //     hint: true,
-        //     highlight: true,
-        //     minLength: 2
-        // }, { source: suggests.ttAdapter() }).on('typeahead:selected', function (obj, datum) {
-        //     this.fetchMovieID(datum.id)
-        // }.bind(this)); // END Instantiate the Typeahead UI
-        //========================= END TYPEAHEAD ==============================//
-
-    } // end component did mount function
+    }
 }
 
 export default myComponent;
