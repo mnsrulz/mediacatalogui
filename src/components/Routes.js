@@ -2,6 +2,8 @@ import Dashboard from './Dashboard/Dashboard';
 import Preferences from './Preferences/Preferences';
 import MediaDirectory from './MediaDirectory/MediaDirectory';
 import RemoteUrlUpload from './RemoteUrlUpload/RemoteUrlUpload';
+import PlaylistComponent from './Playlist/playlistComponent';
+import PlaylistDetails from './Playlist/playlistDetails';
 import CreateNewRemoteUrlUpload from './RemoteUrlUpload/CreateNewRequest';
 import CreateMovieByImdb from './CreateMovie/CreateMovieByImdb';
 
@@ -33,6 +35,19 @@ const Routes = [
         sidebarName: 'Remote Url Upload',
         component: RemoteUrlUpload,
         icon: ShoppingCartIcon
+    },
+    {
+        path: '/playlist',
+        sidebarName: 'Playlist',
+        component: PlaylistComponent,
+        icon: ShoppingCartIcon
+    },    
+    {
+        path: '/playlistdetails/:id',
+        sidebarName: 'Playlist',
+        component: PlaylistComponent,
+        icon: ShoppingCartIcon,
+        hide: true
     },
     {
         path: '/createremoteuploads',

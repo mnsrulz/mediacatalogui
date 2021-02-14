@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { List, ListItemIcon,ListItemText, ListItem } from '@material-ui/core';
+import { List, ListItemIcon, ListItemText, ListItem } from '@material-ui/core';
 import Routes from '../Routes';
 
 const SideNavBar = (props) => {
@@ -10,10 +10,10 @@ const SideNavBar = (props) => {
 
   return (<div>
     <List>
-      {Routes.map((prop, key) => {
+      {Routes.filter(x => !x.hide).map((prop, key) => {
         return (
           <ListItem component={Link} button
-            to={prop.path}
+            to={prop.navurl || prop.path}
             style={{ textDecoration: 'none' }}
             key={key}
             selected={activeRoute(prop.path)}>
