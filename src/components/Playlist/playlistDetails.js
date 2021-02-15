@@ -32,7 +32,7 @@ class myComponent extends React.Component {
         } else if (!isLoaded) {
             return <div>Loading...</div>;
         } else {            
-            return <MovieList movies={data}></MovieList>
+            return <MovieList items={data}></MovieList>
         }
     }
 }
