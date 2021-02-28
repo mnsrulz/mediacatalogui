@@ -1,11 +1,9 @@
 import React from 'react';
-import { Card, CardMedia, Typography, CardContent, CardActionArea, Button, CardActions } from '@material-ui/core';
+import { Card, CardMedia, Typography, CardContent, CardActionArea, CardActions } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 import ResponsiveDialog from '../Playlist/ResponsiveDialog';
-import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 
 // These are inline styles
 // You can pass styles as objects using this convention
@@ -43,9 +41,8 @@ class MovieCardComponent extends React.Component {
   }
 
   render() {
-    const { movie, openMovieModal, handleItemRemove } = this.props;
+    const { movie, handleItemRemove } = this.props;
     // The subtitle won't render if it's null
-    const subtitle = this.state.isMouseOver ? movie.overview : null;
 
     const deleteHandler = async (result) => {
 
@@ -64,6 +61,7 @@ class MovieCardComponent extends React.Component {
       this.setState({ showDeleteDialog: false });
     };
 
+    const posterImage = movie.backdropPath ? `https://image.tmdb.org/t/p/w300${movie.backdropPath}` : '';
     return (
       <div>
         <ResponsiveDialog okButtonText="Yes"
@@ -80,7 +78,7 @@ class MovieCardComponent extends React.Component {
             <CardMedia
               style={styles.cardMedia}
             >
-              <img style={styles.bgImage} src={`https://image.tmdb.org/t/p/w300${movie.backdropPath}`} />
+              <img style={styles.bgImage} src={posterImage} />
             </CardMedia>
             <CardContent>
               <Typography gutterBottom variant="h6" component="h2" noWrap>
@@ -92,14 +90,8 @@ class MovieCardComponent extends React.Component {
             </CardContent>
           </CardActionArea>
           <CardActions disableSpacing>
-            {/* <ToggleButtonGroup aria-label="text formatting">
-              <ToggleButton value="bold" aria-label="bold">
-                <FavoriteIcon />
-              </ToggleButton>              
-            </ToggleButtonGroup> */}
             <IconButton>
               <FavoriteIcon color="primary" />
-              {/* <FavoriteBorder aria-label="remove from favorites"></FavoriteBorder> */}
             </IconButton>
             <IconButton onClick={() => this.setState({ showDeleteDialog: true })}>
               <DeleteIcon aria-label="delete"></DeleteIcon>
