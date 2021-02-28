@@ -8,8 +8,11 @@ import CreateNewRemoteUrlUpload from './RemoteUrlUpload/CreateNewRequest';
 import CreateMovieByImdb from './CreateMovie/CreateMovieByImdb';
 
 import DashboardIcon from '@material-ui/icons/Dashboard';
+import MovieIcon from '@material-ui/icons/Movie';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import AddIcon from '@material-ui/icons/Add';
+import SubscriptionsIcon from '@material-ui/icons/Subscriptions';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-
 
 const Routes = [
     {
@@ -22,46 +25,47 @@ const Routes = [
         path: '/preferences',
         sidebarName: 'Preferences',
         component: Preferences,
-        icon: ShoppingCartIcon
-    },    
+        icon: ShoppingCartIcon,
+        hide: true
+    },
     {
         path: '/movies',
-        sidebarName: 'Movies',
+        sidebarName: 'Media Items',
         component: MediaDirectory,
-        icon: ShoppingCartIcon
+        icon: MovieIcon
     },
     {
         path: '/remoteuploads',
         sidebarName: 'Remote Url Upload',
         component: RemoteUrlUpload,
-        icon: ShoppingCartIcon
-    },
-    {
-        path: '/playlist',
-        sidebarName: 'Playlist',
-        component: PlaylistComponent,
-        icon: ShoppingCartIcon
-    },    
-    {
-        path: '/playlistdetails/:id',
-        sidebarName: 'Playlist',
-        component: PlaylistComponent,
-        icon: ShoppingCartIcon,
-        hide: true
+        icon: CloudUploadIcon
     },
     {
         path: '/createremoteuploads',
         sidebarName: 'New Remote Url Upload',
         component: CreateNewRemoteUrlUpload,
-        icon: ShoppingCartIcon
+        icon: AddIcon
+    },
+    {
+        path: '/playlist',
+        sidebarName: 'Playlist',
+        component: PlaylistComponent,
+        icon: SubscriptionsIcon
+    },
+    {
+        path: '/playlistdetails/:id',
+        sidebarName: 'Playlist',
+        component: PlaylistComponent,
+        icon: SubscriptionsIcon,
+        hide: true
     },
     {
         path: '/movie/new',
         sidebarName: 'New Movie by IMDB Id',
         component: CreateMovieByImdb,
-        icon: ShoppingCartIcon
+        icon: ShoppingCartIcon,
+        hide: true
     }
-
 ];
 
 export default Routes;

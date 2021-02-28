@@ -1,36 +1,10 @@
-
-import PropTypes, { useState } from 'prop-types';
-
+import PropTypes from 'prop-types';
 import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
+import {Avatar, CssBaseline, Box, Container} from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-
 import { GoogleLogin } from 'react-google-login';
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
+import {Copyright} from '../Copyright/Copyright';
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -51,10 +25,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login({setToken}) {
+export default function Login({ setToken }) {
   const classes = useStyles();
-  const responseGoogle = (res) => {
-    console.log(res);
+  const responseGoogle = (res) => {    
     setToken(res);
   };
   return (
@@ -63,41 +36,19 @@ export default function Login({setToken}) {
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
-        </Avatar>        
+        </Avatar>
         <GoogleLogin
-          clientId="345350504609-1moo0gfi27h0jj2qaim5ed1iohgprs99.apps.googleusercontent.com"          
+          clientId="345350504609-1moo0gfi27h0jj2qaim5ed1iohgprs99.apps.googleusercontent.com"
           onSuccess={responseGoogle}
           onFailure={responseGoogle}
-        // cookiePolicy={'single_host_origin'}
+          cookiePolicy={'single_host_origin'}
         />
       </div>
 
       <Box mt={8}>
         <Copyright />
       </Box>
-    </Container>
-    // <div>
-    //   <form>
-    //     <label>
-    //       <p>Username</p>
-    //       <input type="text" />
-    //     </label>
-    //     <label>
-    //       <p>Password</p>
-    //       <input type="password" />
-    //     </label>
-    //     <div>
-    //       <button type="submit">Submit</button>
-    //     </div>
-    //   </form>
-    //   <GoogleLogin
-    //     clientId="345350504609-1moo0gfi27h0jj2qaim5ed1iohgprs99.apps.googleusercontent.com"
-    //     // buttonText="Login"
-    //     onSuccess={responseGoogle}
-    //     onFailure={responseGoogle}
-    //     // cookiePolicy={'single_host_origin'}
-    //   />
-    // </div>
+    </Container>    
   )
 }
 

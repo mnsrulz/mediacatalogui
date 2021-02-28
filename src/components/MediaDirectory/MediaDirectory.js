@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import TextField from '@material-ui/core/TextField'
 import { debounce } from '@material-ui/core';
 import MovieList from '../Playlist/movieList';
 
 import { makeStyles } from '@material-ui/core/styles';
+import { apiClient } from "../ApiClient/MediaCatalogNetlifyClient";
 
 const useStyles = makeStyles((theme) => ({
   searchbar: {
@@ -25,15 +25,9 @@ export default function MediaDirectory() {
 
   useEffect(() => {
     (async () => {
-      const idToken = JSON.parse(localStorage.token).tokenId;
       const searchQuery = search;
       setLoading(true);
-      const apiUrl = `https://mediacatalog.netlify.app/.netlify/functions/server/items?q=${searchQuery}`;
-      const result = await axios(apiUrl, {
-        headers: {
-          Authorization: 'Bearer ' + idToken
-        }
-      });
+      const result = await apiClient.get(`items?q=${searchQuery}`);
       if (search === searchQuery) {
         setData(result.data);
         setLoading(false);
