@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 
-export default function useToken() {    
+export default function useToken() {
     useEffect(() => {
-        window.setInterval(() => {            
-            if (getToken() == null) {
-                setToken(null);
+        window.setInterval(() => {
+            console.log('checking token status');
+            if (token && getToken() == null) {
+                internalSetToken(null);
             }
         }, 1000);  //check refresh token every 1 second
     }, []);
@@ -18,11 +19,14 @@ export default function useToken() {
         return null;
     };
 
-    const [token, setToken] = useState(getToken());
+    const [token, internalSetToken] = useState(getToken());
 
     const saveToken = userToken => {
         localStorage.setItem('token', JSON.stringify(userToken));
-        setToken(userToken);
+        const onlyValidToken = getToken();
+        if (onlyValidToken) {
+            internalSetToken(onlyValidToken);
+        }
     };
 
     return {
