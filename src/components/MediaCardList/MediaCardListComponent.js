@@ -1,8 +1,8 @@
 import React from 'react';
 import { Grid, LinearProgress, CircularProgress } from '@material-ui/core';
-import MovieCard from '../Playlist/movieCard';
+import MovieCard from "../MediaCard/MediaCardComponent";
 
-const MovieListComponent = ({ items, isLoading }) => {
+export const MediaCardListComponent = ({ items, isLoading }) => {
     
     // const [movies, setMovies] = React.useState(items);
 
@@ -32,5 +32,3 @@ const MovieListComponent = ({ items, isLoading }) => {
         return <div>No items found</div>
     }
 }
-
-export default MovieListComponent;

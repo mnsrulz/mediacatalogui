@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import MovieList from '../Playlist/movieList'
+import { MediaCardListComponent } from '../MediaCardList/MediaCardListComponent'
 import { apiClient } from "../ApiClient/MediaCatalogNetlifyClient";
 
 export default function PlaylistDetails({ playlistId }) {
@@ -17,7 +17,7 @@ export default function PlaylistDetails({ playlistId }) {
 
     return (
         <div>
-            <MovieList items={data} isLoading={loading}></MovieList>
+            <MediaCardListComponent items={data} isLoading={loading}></MediaCardListComponent>
         </div>
     );
 };

@@ -30,7 +30,9 @@ const styles = {
 
   }
 };
-export default function MovieCardComponent({ movie, handleItemRemove }) {
+
+
+export default function MediaCardComponent({ movie, handleItemRemove }) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [isFavorite, setIsFavorite] = useState(movie.favorite);
 
@@ -49,13 +51,14 @@ export default function MovieCardComponent({ movie, handleItemRemove }) {
       await apiClient.put(`items/${movie.id}/favorite`);
     }
     setIsFavorite(!isFavorite);
-  }
+  };
 
   const posterImage = movie.backdropPath ? `https://image.tmdb.org/t/p/w300${movie.backdropPath}` : '';
 
   const favoritebar = isFavorite ?
     <FavoriteIcon style={{ color: 'red' }} /> :
     <FavoriteBorderOutlinedIcon style={{ color: 'red' }} />;
+
   return (
     <div>
       <ResponsiveDialog okButtonText="Yes"

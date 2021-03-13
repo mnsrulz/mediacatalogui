@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField'
 import { debounce } from '@material-ui/core';
-import MovieList from '../Playlist/movieList';
+import {MediaCardListComponent} from '../MediaCardList/MediaCardListComponent';
 
 import { makeStyles } from '@material-ui/core/styles';
 import { apiClient } from "../ApiClient/MediaCatalogNetlifyClient";
@@ -40,7 +40,7 @@ export default function MediaDirectory() {
       <TextField label="Search" placeholder="Search" fullWidth
         onChange={debounce(handleOnChange, 250)} 
         defaultValue={search} className={classes.searchbar} />
-      <MovieList items={data} isLoading={loading}></MovieList>
+      <MediaCardListComponent items={data} isLoading={loading}></MediaCardListComponent>
     </div>
   );
 }
