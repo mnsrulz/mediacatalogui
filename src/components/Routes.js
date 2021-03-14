@@ -6,6 +6,7 @@ import PlaylistComponent from './Playlist/playlistComponent';
 import PlaylistDetails from './Playlist/playlistDetails';
 import CreateNewRemoteUrlUpload from './RemoteUrlUpload/CreateNewRequest';
 import CreateMovieByImdb from './CreateMovie/CreateMovieByImdb';
+import { MediaSourceExplorerComponent } from './MediaSourceExplorer/MediaSourceExplorerComponent';
 
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import MovieIcon from '@material-ui/icons/Movie';
@@ -13,6 +14,7 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import AddIcon from '@material-ui/icons/Add';
 import SubscriptionsIcon from '@material-ui/icons/Subscriptions';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import AccountTreeIcon from '@material-ui/icons/AccountTree';
 
 const Routes = [
     {
@@ -65,6 +67,12 @@ const Routes = [
         component: CreateMovieByImdb,
         icon: ShoppingCartIcon,
         hide: true
+    },
+    {
+        path: '/explorer',
+        sidebarName: 'Media Source Explorer',
+        component: MediaSourceExplorerComponent,
+        icon: AccountTreeIcon
     }
 ];
 
