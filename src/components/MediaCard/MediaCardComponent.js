@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { Card, CardMedia, Typography, CardContent, CardActionArea, CardActions, IconButton } from '@material-ui/core';
+import { Card, CardMedia, Typography, CardContent, CardActionArea, CardActions, IconButton, ButtonGroup, Button } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import FavoriteBorderOutlinedIcon from '@material-ui/icons/FavoriteBorderOutlined';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import SubscriptionsIcon from '@material-ui/icons/Subscriptions';
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import ResponsiveDialog from '../Playlist/ResponsiveDialog';
+import PlaylistSelectionDialog from '../MediaCard/PlaylistSelectionDialog';
 import { apiClient } from "../ApiClient/MediaCatalogNetlifyClient";
 
 // These are inline styles
@@ -31,9 +34,9 @@ const styles = {
   }
 };
 
-
 export default function MediaCardComponent({ movie, handleItemRemove }) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showPlaylistSelectionDialog, setShowPlaylistSelectionDialog] = useState(false);
   const [isFavorite, setIsFavorite] = useState(movie.favorite);
 
   const deleteHandler = async (result) => {
@@ -57,7 +60,7 @@ export default function MediaCardComponent({ movie, handleItemRemove }) {
 
   const favoritebar = isFavorite ?
     <FavoriteIcon style={{ color: 'red' }} /> :
-    <FavoriteBorderOutlinedIcon style={{ color: 'red' }} />;
+    <FavoriteBorderIcon />;
 
   return (
     <div>
@@ -65,7 +68,11 @@ export default function MediaCardComponent({ movie, handleItemRemove }) {
         cancelButtonText="No"
         confirmText="Confirm Delete?"
         clickHandler={deleteHandler}
-        open={showDeleteDialog}></ResponsiveDialog>
+        open={showDeleteDialog} />
+      <PlaylistSelectionDialog open={showPlaylistSelectionDialog} selectedPlaylist={movie.playlistIds}
+        mediaId={movie.id}
+        onClose={() => { setShowPlaylistSelectionDialog(false) }}
+      />
       <Card style={styles.card}>
         <CardActionArea>
           <CardMedia style={styles.cardMedia}>
@@ -86,6 +93,9 @@ export default function MediaCardComponent({ movie, handleItemRemove }) {
           </IconButton>
           <IconButton onClick={() => setShowDeleteDialog(true)}>
             <DeleteIcon aria-label="delete"></DeleteIcon>
+          </IconButton>
+          <IconButton onClick={() => setShowPlaylistSelectionDialog(true)} aria-label="settings">
+            <SubscriptionsIcon />
           </IconButton>
         </CardActions>
       </Card>
