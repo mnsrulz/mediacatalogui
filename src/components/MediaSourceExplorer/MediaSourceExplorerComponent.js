@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Fab, Tooltip, TextField } from '@material-ui/core';
+import { Fab, Tooltip, TextField, IconButton, InputAdornment } from '@material-ui/core';
 import { green, red } from '@material-ui/core/colors';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import CheckCircleIcon from '@material-ui/icons/Check';
+import SearchIcon from '@material-ui/icons/Search';
 import ErrorIcon from '@material-ui/icons/Edit';
-import AddIcon from '@material-ui/icons/Add';
 import Tree from 'react-d3-tree';
 import axios from 'axios';
 import clone from 'clone';
@@ -41,6 +40,11 @@ const useStyles = makeStyles((theme) => ({
         left: '50%',
         marginTop: -12,
         marginLeft: -12,
+    }, iconButton: {
+        padding: 10,
+    }, input: {
+        marginLeft: theme.spacing(1),
+        flex: 1,
     },
 }));
 
@@ -51,13 +55,16 @@ export const MediaSourceExplorerComponent = ({ items, isLoading }) => {
 
     const handleRootUrlOnChange = (event) => {
         const { value } = event.target;
-        setRootUrl(value);
+        setRootUrl(value);        
+    };
+    
+    const setTreeRootUrl = () => {
         setData({
-            name: value,
+            name: rootUrl,
             attributes: {
-                url: value,
+                url: rootUrl,
                 id: uniqueid()
-            }    
+            }
         })
     };
 
@@ -152,13 +159,19 @@ export const MediaSourceExplorerComponent = ({ items, isLoading }) => {
     return <div>
 
         <div id="treeWrapper" style={{ height: '40em' }}>
-            <TextField label="Root Url" placeholder="Root Url" fullWidth
+            <TextField label="Root Url" placeholder="Root Url" fullWidth InputProps={{
+                endAdornment: (<InputAdornment>
+                    <IconButton color="primary" className={classes.iconButton} aria-label="search" onClick={setTreeRootUrl}>
+                        <SearchIcon />
+                    </IconButton>
+                </InputAdornment>)
+            }}
                 onChange={handleRootUrlOnChange} />
-
             <Tree data={data}
                 orientation='vertical'
                 onNodeClick={onNodeClickCallback}
                 nodeSize={nodeSize}
+                translate={{ x: 100, y: 100 }}
                 renderCustomNodeElement={(rd3tProps) =>
                     renderForeignObjectNode({ ...rd3tProps, foreignObjectProps })
                 }
