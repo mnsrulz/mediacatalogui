@@ -7,6 +7,7 @@ import PlaylistDetails from './Playlist/playlistDetails';
 import CreateNewRemoteUrlUpload from './RemoteUrlUpload/CreateNewRequest';
 import CreateMovieByImdb from './CreateMovie/CreateMovieByImdb';
 import { MediaSourceExplorerComponent } from './MediaSourceExplorer/MediaSourceExplorerComponent';
+import MediaSourceListComponent from './MediaSourceList/MediaSourceListComponent';
 
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import MovieIcon from '@material-ui/icons/Movie';
@@ -72,6 +73,12 @@ const Routes = [
         path: '/explorer',
         sidebarName: 'Media Source Explorer',
         component: MediaSourceExplorerComponent,
+        icon: AccountTreeIcon
+    },
+    {
+        path: '/source',
+        sidebarName: 'Media Source',
+        component: MediaSourceListComponent,
         icon: AccountTreeIcon
     }
 ];
