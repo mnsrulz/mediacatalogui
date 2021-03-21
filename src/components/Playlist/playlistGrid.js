@@ -1,10 +1,9 @@
 import React from 'react';
 import { Typography, Button, Link } from '@material-ui/core';
 import MUIDataTable from "mui-datatables";
-import moment from 'moment';
 
-const PlaylistGridComponent = ({ data }) => {
-    const mo = moment;
+
+const PlaylistGridComponent = ({ data }) => {    
     const columns = [{
         name: "title",
         options: {
@@ -20,7 +19,7 @@ const PlaylistGridComponent = ({ data }) => {
         name: "ts", label: "Created", options: {
             customBodyRender: (value) => {
                 return (
-                    <div title={value}>{mo(value).fromNow()}</div>
+                    <div title={value}>{value}</div>
                 );
             }
         }
