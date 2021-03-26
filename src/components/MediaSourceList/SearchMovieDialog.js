@@ -1,0 +1,124 @@
+import { useState, useEffect } from 'react';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import { DialogActions, debounce, Divider, Checkbox, FormControlLabel, Tabs, Tab, Paper } from '@material-ui/core';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import { tmdbClient } from '../ApiClient/TmdbClient'
+import { Avatar, List, ListItem, ListItemAvatar, ListItemText } from '@material-ui/core';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useTheme } from '@material-ui/core/styles';
+
+import PhoneIcon from '@material-ui/icons/Phone';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import PersonPinIcon from '@material-ui/icons/PersonPin';
+
+export function SearchMovieDialog({ handleSelect, show, query, isTv }) {
+    // const [open, setOpen] = useState(show);
+    const [searchQuery, setSearchQuery] = useState(query);
+    const [searchTv, setSearchTv] = useState(isTv);
+    const [results, setResults] = useState([]);
+    const [selectedId, setSelectedId] = useState(0);
+
+    const theme = useTheme();
+    //const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+    const handleClose = () => {
+        handleSelect(null);
+    };
+
+    const handleItemSelectionClose = () => {
+        handleSelect({
+            id: selectedId,
+            isTv: searchTv
+        });
+    };
+
+    const handleOnChange = (event) => {
+        const { value } = event.target;
+        setSearchQuery(value);
+    };
+
+    const handleSetTv = (event) => {
+        const { checked } = event.target;
+        setSearchTv(checked);
+    }
+
+    useEffect(() => {
+        if (!searchQuery || !show) return;
+        (async () => {
+            console.log(searchTv);
+            const { results } = await tmdbClient.search(searchQuery, searchTv);
+            setResults(results);
+        })();
+    }, [searchQuery, show, searchTv]);
+
+    const [value, setValue] = useState(isTv ? 1 : 0);
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+        setSearchTv(newValue === 1);
+        setSelectedId(0);
+    };
+
+    return (<div>
+        <Dialog open={show}
+            fullWidth={true}
+            onClose={handleClose} aria-labelledby="form-dialog-title">
+            {/* <DialogTitle id="form-dialog-title">Search</DialogTitle> */}
+            <DialogTitle style={{ padding: 0 }}>
+                <Tabs
+                    value={value}
+                    onChange={handleChange}
+                    variant="fullWidth"
+                    indicatorColor="secondary"
+                    textColor="secondary">
+                    <Tab icon={<PhoneIcon />} label="MOVIES" />
+                    <Tab icon={<FavoriteIcon />} label="TV" />
+                </Tabs>
+            </DialogTitle>
+            <DialogContent dividers>
+                <TextField
+                    autoFocus
+                    margin="dense"
+                    label="Title"
+                    defaultValue={searchQuery}
+                    fullWidth
+                    onChange={debounce(handleOnChange, 250)}
+                />
+
+                {/* <FormControlLabel control={<Checkbox defaultChecked={searchTv}
+                    onChange={handleSetTv} />} label="TV" /> */}
+                {
+                    results && (<List component="nav">
+                        {results.map((value) => {
+                            return (<ListItem
+                                key={value.id}
+                                button
+                                selected={selectedId === value.id}
+                                onClick={() => setSelectedId(value.id)}
+                            >
+                                <ListItemAvatar>
+                                    <Avatar src={value.poster_path && `https://image.tmdb.org/t/p/w92${value.poster_path}`}></Avatar>
+                                </ListItemAvatar>
+                                <ListItemText primary={`${value.title || value.name}`}
+                                    secondary={value.release_date?.substr(0, 4)} />
+                            </ListItem>)
+                        })}
+                    </List>)
+                }
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleClose} color="primary">
+                    Cancel
+          </Button>
+                <Button onClick={handleItemSelectionClose} color="primary" disabled={selectedId === 0}>
+                    Ok
+          </Button>
+            </DialogActions>
+        </Dialog>
+    </div>);
+
+}

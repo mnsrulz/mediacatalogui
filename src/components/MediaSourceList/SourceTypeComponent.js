@@ -1,4 +1,4 @@
-import { Chip } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 export default function SourceTypeComponent({ value }) {
     const getRenderValue = () => {
         switch (value) {
@@ -9,6 +9,6 @@ export default function SourceTypeComponent({ value }) {
             default:
                 return value                
         }
-    }
-    return <Chip color="primary" label={getRenderValue()} variant="outlined"></Chip>;
+    }    
+    return <Typography variant="body2" color="textSecondary">{getRenderValue()}</Typography>
 }
