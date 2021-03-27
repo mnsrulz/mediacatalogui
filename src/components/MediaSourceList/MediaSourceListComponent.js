@@ -42,9 +42,9 @@ export default function MediaSourceList() {
     const columns: GridColumns = [
         { field: 'renderedTitle', headerName: 'Title', sortable: false, flex: 1 },
         {
-            field: 'parserInfo', headerName: 'Parser Title', sortable: false, flex: 1, renderCell: ({ value, row }) => {
-                return <MovieFetchComponent            
-                    value={value?.title} isTv={value?.isTv}
+            field: 'parserInfo', headerName: 'Parser Title', sortable: false, flex: 1, renderCell: ({ value, row }) => {                
+                return <MovieFetchComponent
+                    value={value?.title || row.renderedTitle} isTv={value?.isTv}
                     mediaSourceId={row.id}
                     mediaItemId={row.mediaItemId}
                     handleMediaAssignment={fxhandleMediaAssignment}

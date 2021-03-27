@@ -9,11 +9,22 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { tmdbClient } from '../ApiClient/TmdbClient'
 import { Avatar, List, ListItem, ListItemAvatar, ListItemText } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { useTheme } from '@material-ui/core/styles';
+import { useTheme, makeStyles } from '@material-ui/core/styles';
 
 import PhoneIcon from '@material-ui/icons/Phone';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
+
+const useStyles = makeStyles((theme) => ({
+    searchbar: {
+        marginBottom: theme.spacing(3),
+    },
+    dialogPaper: {
+        minHeight: '80vh',
+        maxHeight: '80vh',
+    }
+}));
+
 
 export function SearchMovieDialog({ handleSelect, show, query, isTv }) {
     // const [open, setOpen] = useState(show);
@@ -22,7 +33,7 @@ export function SearchMovieDialog({ handleSelect, show, query, isTv }) {
     const [results, setResults] = useState([]);
     const [selectedId, setSelectedId] = useState(0);
 
-    const theme = useTheme();
+    const classes = useStyles();
     //const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     const handleClose = () => {
@@ -65,7 +76,8 @@ export function SearchMovieDialog({ handleSelect, show, query, isTv }) {
 
     return (<div>
         <Dialog open={show}
-            fullWidth={true}
+            fullWidth={true}            
+            classes={{ paper: classes.dialogPaper }}
             onClose={handleClose} aria-labelledby="form-dialog-title">
             {/* <DialogTitle id="form-dialog-title">Search</DialogTitle> */}
             <DialogTitle style={{ padding: 0 }}>

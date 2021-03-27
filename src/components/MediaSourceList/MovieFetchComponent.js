@@ -127,28 +127,31 @@ export const MovieFetchComponent = ({ value, isTv, mediaSourceId, mediaItemId, h
             title={title}
         />
     </Card>
+    const chip = <Chip
+        size='medium'
+        avatar={<Avatar src={avatarUrl} />}
+        color="primary" label={title || value}
+        variant="outlined"
+        onClick={showDialogHandler}
+        onDelete={hasResult ? innerDeleteHandler : null}
+        deleteIcon={deleteIcon}
+        clickable></Chip>
 
     if (mediaItemId) {
         return <span>{mediaItemId}</span>
     } else if (loading) {
         return <div>Loading...</div>;
     }
-    else {
-        // return <span>hello</span>
-        {/* <SearchMovieDialog show={showDialog}></SearchMovieDialog> */ }
-        // <div>            </div>
+    else if (hasResult) {
         return <div>
             <SearchMovieDialog show={showDialog} query={title} isTv={isTv} handleSelect={handleSelectSearchDialog}></SearchMovieDialog>
             <LightTooltip interactive title={miniPoster} enterDelay={500} placement="right" arrow>
-                <Chip
-                    size='medium'
-                    avatar={<Avatar src={avatarUrl} />}
-                    color="primary" label={title}
-                    variant="outlined"
-                    onClick={showDialogHandler}
-                    onDelete={hasResult ? innerDeleteHandler : null}
-                    deleteIcon={deleteIcon}
-                    clickable></Chip>
+                {chip}
             </LightTooltip></div>
+    } else {
+        return <div>
+            <SearchMovieDialog show={showDialog} query={title || value} isTv={isTv} handleSelect={handleSelectSearchDialog}></SearchMovieDialog>
+            {chip}
+        </div>
     }
 }
