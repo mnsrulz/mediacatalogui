@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { Card, CardMedia, Typography, CardContent, CardActionArea, CardActions, IconButton, ButtonGroup, Button } from '@material-ui/core';
+import { Card, CardMedia, Typography, CardContent, CardActionArea, CardActions, IconButton } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import SubscriptionsIcon from '@material-ui/icons/Subscriptions';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import ResponsiveDialog from '../Playlist/ResponsiveDialog';
+import { ResponsiveDialog } from '../Playlist/ResponsiveDialog';
 import PlaylistSelectionDialog from '../MediaCard/PlaylistSelectionDialog';
 import { apiClient } from "../ApiClient/MediaCatalogNetlifyClient";
 

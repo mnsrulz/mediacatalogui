@@ -1,4 +1,4 @@
-import { Avatar, Card, CardContent, CardMedia, Chip, Paper, Tooltip, Typography } from '@material-ui/core';
+import { Avatar, Box, Card, CardContent, CardHeader, CardMedia, Chip, Paper, Tooltip, Typography } from '@material-ui/core';
 import DoneIcon from '@material-ui/icons/Done';
 import { useEffect, useState } from 'react'
 import axios from 'axios'
@@ -6,6 +6,7 @@ import { makeStyles, withStyles } from '@material-ui/core/styles'
 import { apiClient } from '../ApiClient/MediaCatalogNetlifyClient';
 import { tmdbClient } from '../ApiClient/TmdbClient'
 import { SearchMovieDialog } from './SearchMovieDialog'
+import { MiniPoster } from './MiniPoster';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -36,23 +37,31 @@ const useStyles = makeStyles((theme) => ({
         height: 38,
         width: 38,
     },
+    posterMedia: {
+        height: 0,
+        paddingTop: '56.25%', // 16:9
+    }
 }));
 
 const LightTooltip = withStyles((theme) => ({
     tooltip: {
         backgroundColor: theme.palette.common.white,
-        color: 'rgba(0, 0, 0, 0.87)',
-        boxShadow: theme.shadows[1],
+        color: 'rgba(0, 0, 0, 1)',
         padding: 0,
-        fontSize: 11,
+        borderRadius: '1.5rem'
     },
 }))(Tooltip);
 
 export const MovieFetchComponent = ({ value, isTv, mediaSourceId, mediaItemId, handleMediaAssignment
 }) => {
     //const posterSize = 'w185';  //w92
-    const posterSize = 'w92';  //w92
+    const avatarSize = 'w92';  //w92
+    const posterSize = 'w185';  //w92
+    const backdropSize = 'w300';  //w92
     const [avatarUrl, setAvatarUrl] = useState('');
+    const [backdropPath, setBackdropPath] = useState('');
+    const [posterPath, setPosterPath] = useState('');
+    const [posterUrl, setPosterUrl] = useState('');
     const [title, setTitle] = useState(value);
     const [year, setYear] = useState('');
     const [overview, setOverview] = useState('');
@@ -70,7 +79,16 @@ export const MovieFetchComponent = ({ value, isTv, mediaSourceId, mediaItemId, h
                 setHasResult(true);
                 setResult(results[0]);
                 setTitle(results[0].title || results[0].name);
-                setAvatarUrl(`https://image.tmdb.org/t/p/${posterSize}${results[0].poster_path}`);
+                setAvatarUrl(`https://image.tmdb.org/t/p/${avatarSize}${results[0].poster_path}`);
+                setPosterUrl(`https://image.tmdb.org/t/p/${posterSize}${results[0].poster_path}`);
+
+                //https://image.tmdb.org/t/p/original/hkBaDkMWbLaf8B1lsWsKX7Ew3Xq.jpg
+
+                setBackdropPath(results[0].backdrop_path);
+                setPosterPath(results[0].poster_path);
+
+
+
                 setYear(results[0].release_date?.substr(0, 4) || results[0].first_air_date?.substr(0, 4));
                 setOverview(results[0].overview);
             }
@@ -110,23 +128,8 @@ export const MovieFetchComponent = ({ value, isTv, mediaSourceId, mediaItemId, h
         }
     }
 
-    const miniPoster = <Card className={classes.root}>
-        <div className={classes.details}>
-            <CardContent className={classes.content}>
-                <Typography>
-                    {title} ({year})
-                </Typography>
-                <Typography lin variant="subtitle2" color="textSecondary" >
-                    {overview}
-                </Typography>
-            </CardContent>
-        </div>
-        <CardMedia
-            className={classes.cover}
-            image={avatarUrl}
-            title={title}
-        />
-    </Card>
+
+    const miniPoster = <MiniPoster title={title} backpath={backdropPath} isTv={isTv} year={year} posterPath={posterPath} />
     const chip = <Chip
         size='medium'
         avatar={<Avatar src={avatarUrl} />}
@@ -135,6 +138,7 @@ export const MovieFetchComponent = ({ value, isTv, mediaSourceId, mediaItemId, h
         onClick={showDialogHandler}
         onDelete={hasResult ? innerDeleteHandler : null}
         deleteIcon={deleteIcon}
+        style={{ maxWidth: 240 }}
         clickable></Chip>
 
     if (mediaItemId) {

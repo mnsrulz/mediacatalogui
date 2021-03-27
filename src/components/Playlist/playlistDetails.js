@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { MediaCardListComponent } from '../MediaCardList/MediaCardListComponent'
 import { apiClient } from "../ApiClient/MediaCatalogNetlifyClient";
 
-export default function PlaylistDetails({ playlistId }) {
+export const PlaylistDetails = ({ playlistId }) => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -13,7 +13,7 @@ export default function PlaylistDetails({ playlistId }) {
             setData(result.data);
             setLoading(false);
         })();
-    }, []);
+    }, [playlistId]);
 
     return (
         <div>

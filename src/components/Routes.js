@@ -2,12 +2,11 @@ import Dashboard from './Dashboard/Dashboard';
 import Preferences from './Preferences/Preferences';
 import MediaDirectory from './MediaDirectory/MediaDirectory';
 import RemoteUrlUpload from './RemoteUrlUpload/RemoteUrlUpload';
-import PlaylistComponent from './Playlist/playlistComponent';
-import PlaylistDetails from './Playlist/playlistDetails';
+import { PlaylistPage } from './Playlist/playlistComponent';
 import CreateNewRemoteUrlUpload from './RemoteUrlUpload/CreateNewRequest';
 import CreateMovieByImdb from './CreateMovie/CreateMovieByImdb';
 import { MediaSourceExplorerComponent } from './MediaSourceExplorer/MediaSourceExplorerComponent';
-import MediaSourceListComponent from './MediaSourceList/MediaSourceListComponent';
+import { MediaSourceListComponent } from './MediaSourceList/MediaSourceListComponent';
 
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import MovieIcon from '@material-ui/icons/Movie';
@@ -52,13 +51,13 @@ const Routes = [
     {
         path: '/playlist',
         sidebarName: 'Playlist',
-        component: PlaylistComponent,
+        component: PlaylistPage,
         icon: SubscriptionsIcon
     },
     {
         path: '/playlistdetails/:id',
         sidebarName: 'Playlist',
-        component: PlaylistComponent,
+        component: PlaylistPage,
         icon: SubscriptionsIcon,
         hide: true
     },

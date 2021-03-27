@@ -6,7 +6,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 
-export default function ResponsiveDialog({ confirmText, okButtonText, cancelButtonText, clickHandler, open }) {
+export const ResponsiveDialog = ({ confirmText, okButtonText, cancelButtonText, clickHandler, open }) => {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 

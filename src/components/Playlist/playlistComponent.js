@@ -1,8 +1,8 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import PlaylistDetails from '../Playlist/playlistDetails'
+import { PlaylistDetails } from './playlistDetails'
 import Playlist from '../Playlist/playlist'
-export default function MediaDirectory() {
+export const PlaylistPage = () => {
     let { id } = useParams();
     if (id) {
         return (
