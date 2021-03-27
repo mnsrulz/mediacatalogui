@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react';
 
 export default function useToken() {
     useEffect(() => {
-        window.setInterval(() => {
-            console.log('checking token status');
+        const handle = window.setInterval(() => {
+            console.log('checking token status', handle);
             if (token && getToken() == null) {
                 internalSetToken(null);
             }
         }, 1000);  //check refresh token every 1 second
+        return () => clearInterval(handle); //cleanup
     }, []);
 
     const getToken = () => {
