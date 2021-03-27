@@ -7,6 +7,7 @@ import { apiClient } from '../ApiClient/MediaCatalogNetlifyClient';
 import { tmdbClient } from '../ApiClient/TmdbClient'
 import { SearchMovieDialog } from './SearchMovieDialog'
 import { MiniPoster } from './MiniPoster';
+import { SimilarMovieAssign } from './SimilarMovieAssign';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -71,6 +72,8 @@ export const MovieFetchComponent = ({ value, isTv, mediaSourceId, mediaItemId, h
     const [loading, setLoading] = useState(true);
     const [showDialog, setShowDialog] = useState(false);
 
+    const [similarMediaItemShowDialog, setSimilarMediaItemShowDialog] = useState(false);
+
     useEffect(() => {
         if (!value) return;
         (async () => {
@@ -108,12 +111,14 @@ export const MovieFetchComponent = ({ value, isTv, mediaSourceId, mediaItemId, h
             const response = await apiClient.get(`/items/byExternalId/${id}?type=tmdb`);
             mediaItemId = response.data.id;
         } catch (error) {
-            const imdbId = await tmdbClient.findImdbId(id, isthisitemtv);            
+            const imdbId = await tmdbClient.findImdbId(id, isthisitemtv);
             const response = await apiClient.post(`items/byExternalId/${imdbId}?type=imdb`);
             mediaItemId = response.data.id;
         }
         await apiClient.put(`/mediasources/${mediaSourceId}/mediaItemId/${mediaItemId}`);
         handleMediaAssignment && handleMediaAssignment({ mediaItemId, mediaSourceId });
+
+        setSimilarMediaItemShowDialog(true);
     }
 
     const showDialogHandler = () => {
@@ -141,19 +146,24 @@ export const MovieFetchComponent = ({ value, isTv, mediaSourceId, mediaItemId, h
         clickable></Chip>
 
     if (mediaItemId) {
-        return <span>{mediaItemId}</span>
+
+        return <div>
+            <SimilarMovieAssign show={similarMediaItemShowDialog} mediaItemId={mediaItemId} query={value} handleSelect={() => setSimilarMediaItemShowDialog(false)} />
+            <span>{mediaItemId}</span>
+        </div>
     } else if (loading) {
         return <div>Loading...</div>;
     }
     else if (hasResult) {
         return <div>
-            <SearchMovieDialog show={showDialog} query={title} isTv={isTv} handleSelect={handleSelectSearchDialog}></SearchMovieDialog>
+            {/* <div onClick={() => setSimilarMediaItemShowDialog(true)} > Show</div> */}
+            <SearchMovieDialog show={showDialog} query={title} isTv={isTv} handleSelect={handleSelectSearchDialog} />
             <LightTooltip interactive title={miniPoster} enterDelay={500} placement="right" arrow>
                 {chip}
             </LightTooltip></div>
     } else {
         return <div>
-            <SearchMovieDialog show={showDialog} query={title || value} isTv={isTv} handleSelect={handleSelectSearchDialog}></SearchMovieDialog>
+            <SearchMovieDialog show={showDialog} query={title || value} isTv={isTv} handleSelect={handleSelectSearchDialog} />
             {chip}
         </div>
     }

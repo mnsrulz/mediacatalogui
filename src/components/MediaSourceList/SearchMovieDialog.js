@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export function SearchMovieDialog({ handleSelect, show, query, isTv }) {
+export const SearchMovieDialog = ({ handleSelect, show, query, isTv }) => {
     // const [open, setOpen] = useState(show);
     const [searchQuery, setSearchQuery] = useState(query);
     const [searchTv, setSearchTv] = useState(isTv);
@@ -68,7 +68,7 @@ export function SearchMovieDialog({ handleSelect, show, query, isTv }) {
 
     return (<div>
         <Dialog open={show}
-            fullWidth={true}            
+            fullWidth={true}
             classes={{ paper: classes.dialogPaper }}
             onClose={handleClose} aria-labelledby="form-dialog-title">
             {/* <DialogTitle id="form-dialog-title">Search</DialogTitle> */}
