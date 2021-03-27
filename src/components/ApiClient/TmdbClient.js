@@ -10,9 +10,9 @@ function AuthenticatedClient() {
 
         },
         findImdbId: async (tmdbId, isTv) => {
-            let apiUrl = `${isTv ? 'tv' : 'movie'}/${tmdbId}?api_key=${apiKey}&language=en-US`;
+            let apiUrl = `${isTv ? 'tv' : 'movie'}/${tmdbId}?api_key=${apiKey}&language=en-US&append_to_response=external_ids`;
             const resposne = await _instance.get(apiUrl);
-            return resposne.data.imdb_id;
+            return resposne.data.external_ids.imdb_id;
         },
         search: async (q, isTv) => {
             let apiUrl = `search/${isTv ? 'tv' : 'movie'}?api_key=${apiKey}&language=en-US&&query=${encodeURIComponent(q)}`;

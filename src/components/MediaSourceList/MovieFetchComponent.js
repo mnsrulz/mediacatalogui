@@ -108,8 +108,7 @@ export const MovieFetchComponent = ({ value, isTv, mediaSourceId, mediaItemId, h
             const response = await apiClient.get(`/items/byExternalId/${id}?type=tmdb`);
             mediaItemId = response.data.id;
         } catch (error) {
-            const imdbId = await tmdbClient.findImdbId(id, isthisitemtv);
-            console.log('imdbid', imdbId);
+            const imdbId = await tmdbClient.findImdbId(id, isthisitemtv);            
             const response = await apiClient.post(`items/byExternalId/${imdbId}?type=imdb`);
             mediaItemId = response.data.id;
         }

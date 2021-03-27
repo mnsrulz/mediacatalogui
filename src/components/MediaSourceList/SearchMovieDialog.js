@@ -9,8 +9,8 @@ import { tmdbClient } from '../ApiClient/TmdbClient'
 import { Avatar, List, ListItem, ListItemAvatar, ListItemText } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-import PhoneIcon from '@material-ui/icons/Phone';
-import FavoriteIcon from '@material-ui/icons/Favorite';
+import MovieIcon from '@material-ui/icons/Movie';
+import TvIcon from '@material-ui/icons/Tv';
 
 const useStyles = makeStyles((theme) => ({
     searchbar: {
@@ -79,8 +79,8 @@ export function SearchMovieDialog({ handleSelect, show, query, isTv }) {
                     variant="fullWidth"
                     indicatorColor="secondary"
                     textColor="secondary">
-                    <Tab icon={<PhoneIcon />} label="MOVIES" />
-                    <Tab icon={<FavoriteIcon />} label="TV" />
+                    <Tab icon={<MovieIcon />} label="MOVIES" />
+                    <Tab icon={<TvIcon />} label="TV" />
                 </Tabs>
             </DialogTitle>
             <DialogContent dividers>
@@ -108,7 +108,7 @@ export function SearchMovieDialog({ handleSelect, show, query, isTv }) {
                                     <Avatar src={value.poster_path && `https://image.tmdb.org/t/p/w92${value.poster_path}`}></Avatar>
                                 </ListItemAvatar>
                                 <ListItemText primary={`${value.title || value.name}`}
-                                    secondary={value.release_date?.substr(0, 4)} />
+                                    secondary={(value.release_date || value.first_air_date)?.substr(0, 4)} />
                             </ListItem>)
                         })}
                     </List>)
