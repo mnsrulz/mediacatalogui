@@ -30,8 +30,9 @@ export const MediaSourceListComponent = () => {
 
     const fxhandleMediaAssignment = async (result) => {
         const updatedRows = rows.map(x => {
-            if (x.id === result.mediaSourceId) {
-                x.mediaItemId = result.mediaItemId;
+            const matchingResult = result.find(y => y.mediaSourceId === x.id);
+            if (matchingResult) {
+                x.mediaItemId = matchingResult.mediaItemId;
             }
             return x;
         })
@@ -39,7 +40,7 @@ export const MediaSourceListComponent = () => {
     };
 
     const columns: GridColumns = [
-        { field: 'renderedTitle', headerName: 'Title', width:340, sortable: false, flex: 1 },
+        { field: 'renderedTitle', headerName: 'Title', width: 340, sortable: false, flex: 1 },
         {
             field: 'parserInfo', headerName: 'Parser Title', sortable: false, width: 280, renderCell: ({ value, row }) => {
                 return <MovieFetchComponent

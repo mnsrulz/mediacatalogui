@@ -116,7 +116,7 @@ export const MovieFetchComponent = ({ value, isTv, mediaSourceId, mediaItemId, h
             mediaItemId = response.data.id;
         }
         await apiClient.put(`/mediasources/${mediaSourceId}/mediaItemId/${mediaItemId}`);
-        handleMediaAssignment && handleMediaAssignment({ mediaItemId, mediaSourceId });
+        handleMediaAssignment && handleMediaAssignment([{ mediaItemId, mediaSourceId }]);
 
         setSimilarMediaItemShowDialog(true);
     }
@@ -132,6 +132,13 @@ export const MovieFetchComponent = ({ value, isTv, mediaSourceId, mediaItemId, h
         }
     }
 
+    const handleSelectAssignMovieDialog = (assignedItems) => {
+        setSimilarMediaItemShowDialog(false);
+        if (assignedItems) {
+            const payloadToSend = assignedItems.map(mediaSourceId => { return { mediaItemId, mediaSourceId } });
+            handleMediaAssignment && handleMediaAssignment(payloadToSend);
+        }
+    }
 
     const miniPoster = <MiniPoster title={title} backpath={backdropPath} isTv={isTv} year={year} posterPath={posterPath} />
     const chip = <Chip
@@ -146,9 +153,8 @@ export const MovieFetchComponent = ({ value, isTv, mediaSourceId, mediaItemId, h
         clickable></Chip>
 
     if (mediaItemId) {
-
         return <div>
-            <SimilarMovieAssign show={similarMediaItemShowDialog} mediaItemId={mediaItemId} query={value} handleSelect={() => setSimilarMediaItemShowDialog(false)} />
+            <SimilarMovieAssign show={similarMediaItemShowDialog} mediaItemId={mediaItemId} query={value} handleSelect={handleSelectAssignMovieDialog} />
             <span>{mediaItemId}</span>
         </div>
     } else if (loading) {
