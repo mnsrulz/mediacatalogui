@@ -145,7 +145,7 @@ function App() {
           </Toolbar>
         </AppBar>
         <BrowserRouter>
-          <Drawer variant="temporary"
+          <Drawer variant="permanent"
             classes={{
               paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
             }} open={open}>

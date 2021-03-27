@@ -5,7 +5,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import SubscriptionsIcon from '@material-ui/icons/Subscriptions';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import { ResponsiveDialog } from '../Playlist/ResponsiveDialog';
-import PlaylistSelectionDialog from '../MediaCard/PlaylistSelectionDialog';
+import { PlaylistSelectionDialog } from '../MediaCard/PlaylistSelectionDialog';
 import { apiClient } from "../ApiClient/MediaCatalogNetlifyClient";
 
 // These are inline styles

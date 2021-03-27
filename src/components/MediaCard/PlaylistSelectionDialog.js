@@ -3,7 +3,7 @@ import { useTheme } from '@material-ui/core/styles';
 import { Dialog, DialogContent, DialogTitle, Checkbox, FormGroup, FormControlLabel, FormControl } from '@material-ui/core';
 import { apiClient } from "../ApiClient/MediaCatalogNetlifyClient";
 
-export default function PlaylistSelectionDialog({ open, mediaId, selectedPlaylist, onClose }) {
+export const PlaylistSelectionDialog = ({ open, mediaId, selectedPlaylist, onClose }) => {
     const theme = useTheme();
     const [playlists, setPlaylists] = useState([]);
 
@@ -45,6 +45,7 @@ export default function PlaylistSelectionDialog({ open, mediaId, selectedPlaylis
                         {playlists.map((value) => {
                             return (
                                 <FormControlLabel
+                                    key={value.id}
                                     control={<Checkbox checked={checked.indexOf(value.id) !== -1}
                                         onChange={handleToggle(value.id)}
                                         color='primary'
@@ -54,7 +55,7 @@ export default function PlaylistSelectionDialog({ open, mediaId, selectedPlaylis
                             );
                         })}
                     </FormGroup>
-                </FormControl>                
+                </FormControl>
             </DialogContent>
         </Dialog>
     );
