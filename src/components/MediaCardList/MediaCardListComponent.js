@@ -1,6 +1,8 @@
 import React from 'react';
 import { Grid, LinearProgress, CircularProgress } from '@material-ui/core';
 import MovieCard from "../MediaCard/MediaCardComponent";
+import { NewMovieCard } from '../MediaCard/NewMovieCard';
+
 
 export const MediaCardListComponent = ({ items, isLoading }) => {
     
@@ -12,7 +14,8 @@ export const MediaCardListComponent = ({ items, isLoading }) => {
     };
     const movieColumns = items ? items.slice(0, 24).map((movie) => (
         <Grid item xs={12} sm={6} md={4} lg={3} key={movie.id}>
-            <MovieCard movie={movie} handleItemRemove={deleteHandler} />
+            <NewMovieCard movie={movie}></NewMovieCard>
+            {/* <MovieCard movie={movie} handleItemRemove={deleteHandler} /> */}
         </Grid>
     )) : null;
     if(isLoading){

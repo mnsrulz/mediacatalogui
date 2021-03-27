@@ -1,24 +1,25 @@
-import { Avatar, Box, Card, CardContent, CardHeader, CardMedia, Grid, Typography } from '@material-ui/core';
+import { Avatar, Box, Card, CardHeader, CardMedia, IconButton, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles'
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 const useStyles = makeStyles((theme) => ({
     card: {
-        width: 360,
-        height: 275,
+        // width: 360,
+        // height: 275,
         position: 'relative',
         boxShadow: '0 8px 24px 0 rgba(0,0,0,0.12)',
         // overflow: 'visible',
         borderRadius: '1.5rem',
         transition: '0.4s',
-        // '&:hover': {
-        //     transform: 'translateY(-2px)',
-        //     '& $shadow': {
-        //         bottom: '-1.5rem',
-        //     },
-        //     '& $shadow2': {
-        //         bottom: '-2.5rem',
-        //     },
-        // },
+        '&:hover': {
+            transform: 'scale(1.02)',
+            '& $shadow': {
+                bottom: '-1.5rem',
+            },
+            '& $shadow2': {
+                bottom: '-2.5rem',
+            },
+        },
         // '&:before': {
         //     content: '""',
         //     position: 'absolute',
@@ -38,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
         color: '#fff',
     },
     main: {
-        height: 200,
+        maxHeight: 385,
         overflow: 'hidden',
         borderTopLeftRadius: '1.5rem',
         borderTopRightRadius: '1.5rem',
@@ -85,9 +86,13 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: 500
     }
 }));
-export const MiniPoster = ({ posterPath, backpath, title, year, isTv }) => {
+export const MiniPoster = ({ posterPath, backpath, title, year, isTv, tagline, mode }) => {
     const classes = useStyles();
     const calculatedBackdrop = () => {
+        if (mode === 'portrait') {
+            return `https://image.tmdb.org/t/p/w500${posterPath}`
+        }
+
         if (backpath)
             return `https://image.tmdb.org/t/p/w780/${backpath}`;
         else
@@ -95,7 +100,7 @@ export const MiniPoster = ({ posterPath, backpath, title, year, isTv }) => {
     }
     const calculatedPosterPath = () => {
         return `https://image.tmdb.org/t/p/w92${posterPath}`
-    }    
+    }
     return (
         <Card className={classes.card}>
             <Box className={classes.main} position={'relative'}>
@@ -108,13 +113,16 @@ export const MiniPoster = ({ posterPath, backpath, title, year, isTv }) => {
                 </div>
             </Box>
             <CardHeader className={classes.author} classes={{
-                content: classes.contentoverride,
-                // title: classes.titleclass,
+                content: classes.contentoverride
             }} avatar={<Avatar src={calculatedPosterPath()} />}
                 title={title}
                 subheader={year}
                 titleTypographyProps={{ noWrap: true, gutterBottom: false }}
                 subheaderTypographyProps={{ noWrap: true }}
+                action={<IconButton>
+                    <MoreVertIcon />
+                </IconButton>
+                }
             />
         </Card>
     )
