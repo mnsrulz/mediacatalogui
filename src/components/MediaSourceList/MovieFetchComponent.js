@@ -73,7 +73,7 @@ export const MovieFetchComponent = ({ value, isTv, mediaSourceId, mediaItemId, h
     const [showDialog, setShowDialog] = useState(false);
 
     const [similarMediaResults, setSimilarMediaResults] = useState([]);
-    
+
 
     const [similarMediaItemShowDialog, setSimilarMediaItemShowDialog] = useState(false);
 
@@ -113,20 +113,18 @@ export const MovieFetchComponent = ({ value, isTv, mediaSourceId, mediaItemId, h
         try {
             const response = await apiClient.get(`/items/byExternalId/${id}?type=tmdb`);
             mediaItemId = response.data.id;
-        } catch (error) {
-            const imdbId = await tmdbClient.findImdbId(id, isthisitemtv);
-            const response = await apiClient.post(`items/byExternalId/${imdbId}?type=imdb`);
+        } catch (error) {            
+            const response = await apiClient.post(`items/byExternalId/${id}?type=tmdb&tmdbHint=${isthisitemtv ? 'tv' : 'movie'}`);
             mediaItemId = response.data.id;
         }
         await apiClient.put(`/mediasources/${mediaSourceId}/mediaItemId/${mediaItemId}`);
         handleMediaAssignment && handleMediaAssignment([{ mediaItemId, mediaSourceId }]);
 
         const similarMediaResponse = await apiClient.get(`mediasources?parsedTitle=${encodeURIComponent(value)}&onlyPendingMediaAssignment=true`);
-        if(similarMediaResponse.data.items && similarMediaResponse.data.items.length>0) 
-        {
+        if (similarMediaResponse.data.items && similarMediaResponse.data.items.length > 0) {
             setSimilarMediaResults(similarMediaResponse.data.items);
             setSimilarMediaItemShowDialog(true);
-        }        
+        }
     }
 
     const showDialogHandler = () => {
@@ -163,8 +161,8 @@ export const MovieFetchComponent = ({ value, isTv, mediaSourceId, mediaItemId, h
     if (mediaItemId) {
         return <div>
             <SimilarMovieAssign show={similarMediaItemShowDialog} mediaItemId={mediaItemId} query={value}
-             items={similarMediaResults}
-             handleSelect={handleSelectAssignMovieDialog} />
+                items={similarMediaResults}
+                handleSelect={handleSelectAssignMovieDialog} />
             <span>{mediaItemId}</span>
         </div>
     } else if (loading) {
