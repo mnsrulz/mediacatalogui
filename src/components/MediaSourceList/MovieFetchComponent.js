@@ -72,6 +72,9 @@ export const MovieFetchComponent = ({ value, isTv, mediaSourceId, mediaItemId, h
     const [loading, setLoading] = useState(true);
     const [showDialog, setShowDialog] = useState(false);
 
+    const [similarMediaResults, setSimilarMediaResults] = useState([]);
+    
+
     const [similarMediaItemShowDialog, setSimilarMediaItemShowDialog] = useState(false);
 
     useEffect(() => {
@@ -118,7 +121,12 @@ export const MovieFetchComponent = ({ value, isTv, mediaSourceId, mediaItemId, h
         await apiClient.put(`/mediasources/${mediaSourceId}/mediaItemId/${mediaItemId}`);
         handleMediaAssignment && handleMediaAssignment([{ mediaItemId, mediaSourceId }]);
 
-        setSimilarMediaItemShowDialog(true);
+        const similarMediaResponse = await apiClient.get(`mediasources?parsedTitle=${encodeURIComponent(value)}&onlyPendingMediaAssignment=true`);
+        if(similarMediaResponse.data.items && similarMediaResponse.data.items.length>0) 
+        {
+            setSimilarMediaResults(similarMediaResponse.data.items);
+            setSimilarMediaItemShowDialog(true);
+        }        
     }
 
     const showDialogHandler = () => {
@@ -154,7 +162,9 @@ export const MovieFetchComponent = ({ value, isTv, mediaSourceId, mediaItemId, h
 
     if (mediaItemId) {
         return <div>
-            <SimilarMovieAssign show={similarMediaItemShowDialog} mediaItemId={mediaItemId} query={value} handleSelect={handleSelectAssignMovieDialog} />
+            <SimilarMovieAssign show={similarMediaItemShowDialog} mediaItemId={mediaItemId} query={value}
+             items={similarMediaResults}
+             handleSelect={handleSelectAssignMovieDialog} />
             <span>{mediaItemId}</span>
         </div>
     } else if (loading) {

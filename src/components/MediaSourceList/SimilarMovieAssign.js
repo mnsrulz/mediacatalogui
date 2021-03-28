@@ -12,21 +12,10 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export const SimilarMovieAssign = ({ show, mediaItemId, query, handleSelect }) => {
+export const SimilarMovieAssign = ({ show, mediaItemId, query, handleSelect, items }) => {
     const classes = useStyles();
-    const [results, setResults] = useState([]);
-    const [checked, setChecked] = useState([]);
-
-    useEffect(() => {
-        if (!query) return;
-        if (!show) return;
-        (async () => {
-            const response = await apiClient.get(`mediasources?parsedTitle=${encodeURIComponent(query)}&onlyPendingMediaAssignment=true`);
-            setResults(response.data.items);
-            setChecked(response.data.items.map(x => x.id));
-        })();
-    }, [query, show]);
-
+    const checkedItems = items?.map(x => x.id);
+    const [checked, setChecked] = useState(checkedItems);
     const handleClose = () => {
         handleSelect();
     };
@@ -61,8 +50,8 @@ export const SimilarMovieAssign = ({ show, mediaItemId, query, handleSelect }) =
                 </DialogTitle>
                 <DialogContent dividers>
                     {
-                        results && (<List>
-                            {results.map((value) => {
+                        items && (<List>
+                            {items.map((value) => {
                                 const labelId = `checkbox-list-label-${value.id}`;
                                 console.log('value is ', value);
                                 return (<ListItem key={value.id} button onClick={handleToggle(value.id)}>
