@@ -14,11 +14,17 @@ const useStyles = makeStyles((theme) => ({
 
 export const SimilarMovieAssign = ({ show, mediaItemId, query, handleSelect, items }) => {
     const classes = useStyles();
-    const checkedItems = items?.map(x => x.id);
-    const [checked, setChecked] = useState(checkedItems);
+    
+    
+    const [checked, setChecked] = useState([]);
     const handleClose = () => {
         handleSelect();
     };
+
+    useEffect(()=>{
+        const checkedItems = items?.map(x => x.id) || [];
+        setChecked(checkedItems)
+    }, [items]);
 
     const handleToggle = (value) => () => {
         const currentIndex = checked.indexOf(value);
