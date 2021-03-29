@@ -12,7 +12,7 @@ export const MediaCardListComponent = ({ items, isLoading }) => {
         const moviesAfterRemove = items.filter(x=>x.id!=mediaId);
         // setMovies(moviesAfterRemove);        
     };
-    const movieColumns = items ? items.slice(0, 24).map((movie) => (
+    const movieColumns = items ? items.map((movie) => (
         <Grid item xs={12} sm={6} md={4} lg={3} key={movie.id}>
             <NewMovieCard movie={movie}></NewMovieCard>
             {/* <MovieCard movie={movie} handleItemRemove={deleteHandler} /> */}

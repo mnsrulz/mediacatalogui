@@ -9,8 +9,8 @@ export const PlaylistDetails = ({ playlistId }) => {
     useEffect(() => {
         (async () => {
             setLoading(true);
-            const result = await apiClient.get(`playlists/${playlistId}/items`);
-            setData(result.data);
+            const result = await apiClient.get(`playlists/${playlistId}/items?pageSize=100`);
+            setData(result.data.items);
             setLoading(false);
         })();
     }, [playlistId]);
