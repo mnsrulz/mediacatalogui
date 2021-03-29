@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Fab, Tooltip, TextField, IconButton, InputAdornment } from '@material-ui/core';
 import { green, red } from '@material-ui/core/colors';
@@ -8,6 +8,8 @@ import ErrorIcon from '@material-ui/icons/Edit';
 import Tree from 'react-d3-tree';
 import axios from 'axios';
 import clone from 'clone';
+import { Link, useParams } from 'react-router-dom';
+import { apiClient } from "../ApiClient/MediaCatalogNetlifyClient";
 
 const useStyles = makeStyles((theme) => ({
     wrapper: {
@@ -49,15 +51,31 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const MediaSourceExplorerComponent = ({ items, isLoading }) => {
+    let { sourceid } = useParams();
+    let pms = useParams();
+    console.log(pms, sourceid);
+
+    useEffect(() => {
+        console.log('calling me..');
+        (async () => {
+            console.log('calling me anotehr..');
+            const mediaSourceResponse = await apiClient.get(`mediasources/${sourceid}`);
+            const { webViewLink } = mediaSourceResponse.data;
+            console.log(webViewLink)
+            setRootUrl(webViewLink);
+            setTreeRootUrl();
+        })();
+    }, []);
+
     const classes = useStyles();
     const uniqueid = () => { return (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)).toUpperCase(); }
     const [rootUrl, setRootUrl] = useState('');
 
     const handleRootUrlOnChange = (event) => {
         const { value } = event.target;
-        setRootUrl(value);        
+        setRootUrl(value);
     };
-    
+
     const setTreeRootUrl = () => {
         setData({
             name: rootUrl,
@@ -159,7 +177,8 @@ export const MediaSourceExplorerComponent = ({ items, isLoading }) => {
     return <div>
 
         <div id="treeWrapper" style={{ height: '40em' }}>
-            <TextField label="Root Url" placeholder="Root Url" fullWidth InputProps={{
+            {rootUrl}
+            <TextField label="Root Url" defaultValue={rootUrl} placeholder="Root Url" fullWidth InputProps={{
                 endAdornment: (<InputAdornment>
                     <IconButton color="primary" className={classes.iconButton} aria-label="search" onClick={setTreeRootUrl}>
                         <SearchIcon />

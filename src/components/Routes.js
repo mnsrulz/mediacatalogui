@@ -69,10 +69,11 @@ const Routes = [
         hide: true
     },
     {
-        path: '/explorer',
+        path: '/explorer/:sourceid',
         sidebarName: 'Media Source Explorer',
         component: MediaSourceExplorerComponent,
-        icon: AccountTreeIcon
+        icon: AccountTreeIcon,
+        hide: true
     },
     {
         path: '/source',
