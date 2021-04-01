@@ -48,6 +48,7 @@ export const NewMovieCard = ({ movie }) => {
 
     const showViewSourceEl = <ViewSourceDialog open={showViewSourceDialog}
         mediaId={movie.id}
+        rootTitle={movie.title}
         onClose={() => { setShowViewSourceDialog(false) }}
     />
 
