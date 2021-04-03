@@ -23,8 +23,8 @@ import NotFound from '../NotFound/NotFound';
 import Routes from '../Routes';
 
 import useToken from './useToken';
-import {Copyright} from '../Copyright/Copyright';
-
+import { Copyright } from '../Copyright/Copyright';
+import { ResponsiveDrawer } from './ResponsiveDrawer';
 
 const drawerWidth = 240;
 
@@ -65,26 +65,6 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
-  },
-  drawerPaper: {
-    position: 'relative',
-    whiteSpace: 'nowrap',
-    width: drawerWidth,
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  drawerPaperClose: {
-    overflowX: 'hidden',
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    width: theme.spacing(7),
-    [theme.breakpoints.up('sm')]: {
-      width: theme.spacing(9),
-    },
   },
   appBarSpacer: theme.mixins.toolbar,
   content: {
@@ -145,19 +125,7 @@ function App() {
           </Toolbar>
         </AppBar>
         <BrowserRouter>
-          <Drawer variant="permanent"
-            classes={{
-              paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-            }} open={open}>
-            <div className={classes.toolbarIcon}>
-              <IconButton onClick={handleDrawerClose}>
-                <ChevronLeftIcon />
-              </IconButton>
-            </div>
-            <Divider />
-            <SideNavBar></SideNavBar>
-          </Drawer>
-
+          <ResponsiveDrawer open={open} handleDrawerClose={handleDrawerClose} />
           <main className={classes.content}>
             <div className={classes.appBarSpacer} />
             <Container maxWidth="lg" className={classes.container}>
