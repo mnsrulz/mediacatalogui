@@ -5,8 +5,6 @@ import Drawer from '@material-ui/core/Drawer';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { useTheme } from '@material-ui/core/styles';
 
 import SideNavBar from '../SideNavBar/SideNavBar';
 const drawerWidth = 240;
@@ -41,10 +39,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-export const ResponsiveDrawer = ({ open, handleDrawerClose }) => {
-    const theme = useTheme();
-    const hiddenDrawerVariant = useMediaQuery(theme.breakpoints.down('sm'));
-
+export const ResponsiveDrawer = ({ open, handleDrawerClose, hiddenDrawerVariant }) => {
     const classes = useStyles();
     return (
         <Drawer variant={hiddenDrawerVariant ? "temporary" : "permanent"}
@@ -57,7 +52,7 @@ export const ResponsiveDrawer = ({ open, handleDrawerClose }) => {
                 </IconButton>
             </div>
             <Divider />
-            <SideNavBar></SideNavBar>
+            <SideNavBar onListItemClick={hiddenDrawerVariant && handleDrawerClose}></SideNavBar>
         </Drawer>
     )
 

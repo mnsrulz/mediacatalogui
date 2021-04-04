@@ -56,7 +56,7 @@ export const Playlist = () => {
                 {
                     isLoading ? <div>Loading...</div> :
                         rows?.map(({ id, title, ts }) => {
-                            return <ListItem button component={Link} to={`/playlistdetails/${id}`}>
+                            return <ListItem key={id} button component={Link} to={`/playlistdetails/${id}`}>
                                 <ListItemText primary={title}
                                     secondary={dayjs(ts).fromNow()}
                                 />

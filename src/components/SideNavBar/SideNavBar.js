@@ -3,9 +3,9 @@ import { Link, withRouter } from 'react-router-dom';
 import { List, ListItemIcon, ListItemText, ListItem } from '@material-ui/core';
 import Routes from '../Routes';
 
-const SideNavBar = (props) => {
+const SideNavBar = ({location, onListItemClick}) => {
   const activeRoute = (routeName) => {
-    return props.location?.pathname === routeName ? true : false;
+    return location?.pathname === routeName ? true : false;
   }
 
   return (<div>
@@ -16,6 +16,7 @@ const SideNavBar = (props) => {
             to={prop.navurl || prop.path}
             style={{ textDecoration: 'none' }}
             key={key}
+            onClick={onListItemClick}
             selected={activeRoute(prop.path)}>
             <ListItemIcon>
               <prop.icon />

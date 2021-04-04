@@ -26,7 +26,12 @@ import useToken from './useToken';
 import { Copyright } from '../Copyright/Copyright';
 import { ResponsiveDrawer } from './ResponsiveDrawer';
 
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useTheme } from '@material-ui/core/styles';
+
+
 const drawerWidth = 240;
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -92,7 +97,10 @@ function App() {
 
   const classes = useStyles();
 
-  const [open, setOpen] = React.useState(true);
+  const theme = useTheme();
+  const hiddenDrawerVariant = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const [open, setOpen] = React.useState(false);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -125,7 +133,7 @@ function App() {
           </Toolbar>
         </AppBar>
         <BrowserRouter>
-          <ResponsiveDrawer open={open} handleDrawerClose={handleDrawerClose} />
+          <ResponsiveDrawer open={open} handleDrawerClose={handleDrawerClose} hiddenDrawerVariant={hiddenDrawerVariant} />
           <main className={classes.content}>
             <div className={classes.appBarSpacer} />
             <Container maxWidth="lg" className={classes.container}>
