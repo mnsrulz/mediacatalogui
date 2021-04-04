@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { apiClient } from "../ApiClient/MediaCatalogNetlifyClient";
 import { Treebeard } from 'react-treebeard';
 import axios from 'axios';
+import { CollapsableListView } from './CollapsableListView';
 const prettyBytes = require('pretty-bytes');
 
 export const SourceExplorer = ({ mediaId, rootTitle }) => {
@@ -15,12 +16,14 @@ export const SourceExplorer = ({ mediaId, rootTitle }) => {
             cursor.active = false;
         }
         node.active = true;
-        if (node.loading) {
+        if (!node.loading && !node.loaded) {
+            node.loading = true;
             node.toggled = toggled;
             setData(Object.assign({}, data));
             const utocall = `https://nurlresolver.netlify.app/.netlify/functions/server/resolve?m=true&q=${encodeURIComponent(node.link)}`;
             const response = await axios.get(utocall);
             node.loading = false;
+            node.loaded = true;
 
             for (const resolvedUrl of response.data) {
                 const { isPlayable, contentType, size } = resolvedUrl;
@@ -29,8 +32,9 @@ export const SourceExplorer = ({ mediaId, rootTitle }) => {
                 const anotherdata = {
                     name: resolvedUrl.title || fileName,
                     link: resolvedUrl.link,
-                    loading: !isPlayable,
-                    children: []
+                    children: [],
+                    canExpand: !isPlayable,
+                    loaded: false
                 }
                 if (isPlayable) {
                     anotherdata.name = `${anotherdata.name} (${prettyBytes(parseInt(size))}) (${contentType})`;
@@ -47,12 +51,14 @@ export const SourceExplorer = ({ mediaId, rootTitle }) => {
 
     useEffect(() => {
         (async () => {
-            const allPlaylist = await apiClient.get(`items/${mediaId}/mediasources`);            
+            const allPlaylist = await apiClient.get(`items/${mediaId}/mediasources`);
 
             const d2 = {
                 name: rootTitle,
                 toggled: true,
-                children: []
+                children: [],
+                canExpand: true,
+                loaded: true
             }
 
             for (const itemData of allPlaylist.data) {
@@ -60,8 +66,9 @@ export const SourceExplorer = ({ mediaId, rootTitle }) => {
                 d2.children.push({
                     name: renderedTitle,
                     link: webViewLink,
-                    loading: true,
-                    children: []
+                    children: [],
+                    canExpand: true,
+                    loaded: false
                 });
             }
             setData(d2);
@@ -70,8 +77,7 @@ export const SourceExplorer = ({ mediaId, rootTitle }) => {
 
     return (
         <div>
-            <Treebeard data={data} onToggle={onToggle} />
+            <CollapsableListView data={data} handleToggle={onToggle} />
         </div>
     )
-
 }

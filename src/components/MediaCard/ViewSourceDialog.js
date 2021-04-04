@@ -1,12 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { useTheme } from '@material-ui/core/styles';
-import { Dialog, DialogContent, DialogTitle, IconButton, List, ListItem, ListItemSecondaryAction, ListItemText, makeStyles } from '@material-ui/core';
-import { apiClient } from "../ApiClient/MediaCatalogNetlifyClient";
-import DeleteIcon from '@material-ui/icons/Delete';
-import { Link, useParams } from 'react-router-dom';
-
+import React, {  } from 'react';
+import { Dialog, DialogContent, DialogTitle, makeStyles } from '@material-ui/core';
 import { SourceExplorer } from './SourceExplorer';
-
 
 const useStyles = makeStyles((theme) => ({
     dialogPaper: {
