@@ -10,7 +10,7 @@ import { Avatar, CircularProgress, ListItemAvatar } from '@material-ui/core';
 import { deepPurple } from '@material-ui/core/colors';
 const useStyles = makeStyles((theme) => ({
     root: {
-        width: '100%',        
+        width: '100%',
         backgroundColor: theme.palette.background.paper,
     },
     nested: {
