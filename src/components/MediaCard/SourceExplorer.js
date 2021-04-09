@@ -37,7 +37,7 @@ export const SourceExplorer = ({ mediaId, rootTitle }) => {
                     loaded: false
                 }
                 if (isPlayable) {
-                    anotherdata.name = `${anotherdata.name} (${prettyBytes(parseInt(size))}) (${contentType})`;
+                    anotherdata.name = `${anotherdata.name} (${prettyBytes(parseInt(size) || 0)}) (${contentType})`;
                 }
 
                 node.children.push(anotherdata);
