@@ -40,9 +40,8 @@ export const Playlist = () => {
 
     useEffect(() => {
         (async () => {
-            const response = await apiClient.get('/playlists');
-            // setRows(response.data);
-            setRows([...response.data, ...[{ title: 'Hdhub', id: 'hdhub' }, { title: 'Extramovies', id: 'extramovies' }]]);
+            const response = await apiClient.get('/playlists?includeSystemDefined=true');            
+            setRows(response.data);
             setIsLoading(false);
         })();
     }, []);
