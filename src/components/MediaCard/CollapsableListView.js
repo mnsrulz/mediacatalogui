@@ -6,8 +6,10 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import { Avatar, CircularProgress, ListItemAvatar } from '@material-ui/core';
+import Backup from '@material-ui/icons/Backup';
+import { Avatar, CircularProgress, IconButton, ListItemAvatar, ListItemSecondaryAction } from '@material-ui/core';
 import { deepPurple } from '@material-ui/core/colors';
+import { Link } from 'react-router-dom';
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
@@ -47,14 +49,39 @@ export const CollapsableListView = ({ data, handleToggle }) => {
         if (data.loaded || data.loading) return;
         if (data.canExpand) handleToggle(data, open);
     };
+
+    const SecondaryAction = () => {
+        const { canExpand, loading } = data;
+        if (canExpand) {
+            if (loading) {
+                return <CircularProgress size="1rem" />
+            } else {
+                return <IconButton size={'small'}>
+                    {open ? <ExpandLess onClick={handleClick} /> : <ExpandMore onClick={handleClick} />}
+                </IconButton>
+            }
+        } else {
+            /*to={`/playlistdetails/${id}`}*/
+            const ctx = data._ctx;
+            if (ctx) {
+                const remoteUploadUrl = `/createremoteuploads?link=${encodeURIComponent(data.link)}&fileName=${encodeURIComponent(data.fileName)}&parent=${encodeURIComponent(data.parent)}&mediaId=${encodeURIComponent(ctx.mediaId)}`;
+                return <IconButton size={'small'} component={Link}
+                    to={remoteUploadUrl}><Backup /></IconButton>
+            } else {
+                return <div></div>
+            }
+        }
+    }
+
     return (<List dense component="nav" disablePadding>
         <ListItem button onClick={handleClick}>
             <ListItemAvatar className={classes.avatarWrapper}>
                 <Avatar className={classes.small}>{getAvatarText(data.link)}</Avatar>
             </ListItemAvatar>
             <ListItemText primary={data.name} />
-            {data.loading && <CircularProgress size="1rem" />}
-            {data.canExpand && (open ? <ExpandLess /> : <ExpandMore />)}
+            <ListItemSecondaryAction>
+                <SecondaryAction />
+            </ListItemSecondaryAction>
         </ListItem>
         <Collapse in={open} timeout="auto" unmountOnExit className={classes.nested} >
             {

@@ -1,13 +1,18 @@
-import { React, useState } from 'react';
-import { useForm, Controller, FormProvider } from 'react-hook-form';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { React, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { makeStyles } from '@material-ui/core/styles';
 import Button from "@material-ui/core/Button";
 import ChooseFilesToUpload from './CreateNewRequest/ChooseFilesToUpload';
-import ChooseFilesToUploadFinalStep from './CreateNewRequest/FinalStep';
-
-import { FormHelperText, TextField, InputLabel, Input, FormControl, Paper, Grid, Typography, Stepper, Step, StepLabel, StepContent } from '@material-ui/core';
+import { FinalStep } from './CreateNewRequest/FinalStep';
+import { apiClient } from '../ApiClient/MediaCatalogNetlifyClient';
+import { TextField, Paper, Typography, Stepper, Step, StepLabel, StepContent, Checkbox, FormControlLabel } from '@material-ui/core';
+import { useLocation } from 'react-router-dom';
 
 // import FormInput from "./../Controls/index";
+
+function useQuery() {
+    return new URLSearchParams(useLocation().search);
+}
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -26,49 +31,91 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function getSteps() {
-    return ['Enter a zip file URL', 'Choose Files to Upload', 'Finish'];
+    return ['Enter the file URL (any types including zip)', 'Choose Files to Upload', 'Finish'];
 }
 
-
-export default function App() {
+export const CreateNewRequest = () => {
     const { control, register, handleSubmit, errors } = useForm();
     const onSubmit = data => { alert('hello'); console.log(data); }
 
     const classes = useStyles();
+    let query = useQuery();
 
+    // const [linkQueryParamValue, setLink] = useState(query.get('link') || '');
+    const [fileName, setFileName] = useState(query.get('fileName') || '');
+    const [parentUrl, setParentUrl] = useState(query.get('parent') || '');
+
+    const [mediaType, setMediaType] = useState();
+    const [title, setTitle] = useState();
+    const [year, setYear] = useState();
+
+    const mediaId = query.get('mediaId');
     const [activeStep, setActiveStep] = useState(0);
-    const [zipFileUrl, setZipFileUrl] = useState('');
+    const [fileUrl, setFileUrl] = useState(query.get('link'));
     const [selectedFiles, setSelectedFiles] = useState([]);
+    const [rawUpload, setRawUpload] = useState(true);
+    const fileNameExtension = fileName.split('.').pop();
 
-    const handleChange = (e) => {
-        setZipFileUrl(e.target.value);
-    };
+    useEffect(() => {
+        if (mediaId) {
+            (async () => {
+                const mediaDetails = await apiClient.get(`items/${mediaId}`);
+                const { itemType, title, year } = mediaDetails.data;
+                setMediaType(itemType);
+                setYear(year);
+                setTitle(title);
+            })();
+        }
+    }, [mediaId]);
 
     const handleFileSelection = (e) => {
         setSelectedFiles(e);
     };
 
-    const steps = getSteps();
+    const steps = ['Enter the file URL (any types including zip)', 'Choose Files to Upload', 'Finish'];
 
-    function getStepContent(step) {        
+    function getStepContent(step) {
         switch (step) {
             case 0:
-                return <TextField name="fileUrl" type="URL" defaultValue={zipFileUrl} fullWidth onChange={handleChange} />;
+                return <div>
+                    <TextField name="fileUrl" type="URL" defaultValue={fileUrl} fullWidth onChange={e => setFileUrl(e.target.value)} />
+                    <p>Parent: {parentUrl}</p>
+                    <p>Media Type: {mediaType}</p>
+                    <p>Title: {title}</p>
+                    <p>Year: {year}</p>
+                    <FormControlLabel control={<Checkbox name="rawUpload"
+                        checked={rawUpload}
+                        onChange={ev => setRawUpload(ev.target.checked)}
+                        disabled={fileNameExtension !== 'zip'} />} label="Raw Upload" />
+                </div>;
             case 1:
-                return <ChooseFilesToUpload defaultZipFileUrl={zipFileUrl} onSelectionChange={handleFileSelection} />;
+                return <ChooseFilesToUpload defaultZipFileUrl={fileUrl} onSelectionChange={handleFileSelection} />;
             case 2:
-                return <ChooseFilesToUploadFinalStep selectedFiles={selectedFiles} zipFileUrl = {zipFileUrl} />;
+                return <FinalStep selectedFiles={selectedFiles} fileUrl={fileUrl} parentUrl={parentUrl}
+                    mediaType={mediaType}
+                    title={title}
+                    year={year}
+                />;
             default:
                 return 'unknown step'
         }
     }
 
-    const handleNext = () => {        
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    const handleNext = () => {
+        if (activeStep === 0 && rawUpload) {
+            //put validation
+            setSelectedFiles([{ path: fileName }]);
+            setActiveStep(2);
+        }
+        else
+            setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
 
     const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+        if (activeStep === 2 && rawUpload)
+            setActiveStep(0)
+        else
+            setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
 
     const handleReset = () => {
@@ -93,7 +140,7 @@ export default function App() {
                                             className={classes.button}
                                         >
                                             Back
-                  </Button>
+                                        </Button>
                                         <Button
                                             variant="contained"
                                             color="primary"
@@ -113,30 +160,10 @@ export default function App() {
                         <Typography>All steps completed - you&apos;re finished</Typography>
                         <Button onClick={handleReset} className={classes.button}>
                             Reset
-          </Button>
+                        </Button>
                     </Paper>
                 )}
             </div>
-            {/* <form onSubmit={handleSubmit(onSubmit)}>
-                <Paper style={{ padding: 16 }}>
-                    <Typography  >
-                        New Request Form
-                        </Typography>
-                    <Grid container alignItems="flex-start" spacing={2}>
-                        <Grid item xs={12}>
-                            <TextField name="zipFileUrl" error={!!errors.username} label="Zip File URL"
-                                helperText={errors.username ? errors.username.message : ''} type="URL" inputRef={register} fullWidth />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <TextField name="username" error={!!errors.username} label="Username"
-                                helperText={errors.username ? errors.username.message : ''} type="email" inputRef={register} fullWidth />
-                        </Grid>
-                        <Grid container item xs={12} justify="flex-end">
-                            <Button color="primary" type="submit" variant="contained" fullWidth>Submit</Button>
-                        </Grid>
-                    </Grid>
-                </Paper>
-            </form> */}
         </div>
     );
 }

@@ -3,7 +3,7 @@ import Preferences from './Preferences/Preferences';
 import MediaDirectory from './MediaDirectory/MediaDirectory';
 import RemoteUrlUpload from './RemoteUrlUpload/RemoteUrlUpload';
 import { PlaylistPage } from './Playlist/playlistComponent';
-import CreateNewRemoteUrlUpload from './RemoteUrlUpload/CreateNewRequest';
+import {CreateNewRequest} from './RemoteUrlUpload/CreateNewRequest';
 import CreateMovieByImdb from './CreateMovie/CreateMovieByImdb';
 import { MediaSourceExplorerComponent } from './MediaSourceExplorer/MediaSourceExplorerComponent';
 import { MediaSourceListComponent } from './MediaSourceList/MediaSourceListComponent';
@@ -45,7 +45,7 @@ const Routes = [
     {
         path: '/createremoteuploads',
         sidebarName: 'New Remote Url Upload',
-        component: CreateNewRemoteUrlUpload,
+        component: CreateNewRequest,
         icon: AddIcon
     },
     {

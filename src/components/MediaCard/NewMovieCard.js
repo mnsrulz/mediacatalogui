@@ -41,7 +41,7 @@ export const NewMovieCard = ({ movie }) => {
         </Menu>
     </div>
 
-    const playlistEl = <PlaylistSelectionDialog open={showPlaylistSelectionDialog} selectedPlaylist={movie.playlistIds.map(x=>x.playlistId)}
+    const playlistEl = <PlaylistSelectionDialog open={showPlaylistSelectionDialog} selectedPlaylist={movie.playlistIds.map(x => x.playlistId)}
         mediaId={movie.id}
         onClose={() => { setShowPlaylistSelectionDialog(false) }}
     />

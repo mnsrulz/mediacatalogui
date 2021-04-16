@@ -42,6 +42,7 @@ export default function Login({ setToken }) {
           onSuccess={responseGoogle}
           onFailure={responseGoogle}
           cookiePolicy={'single_host_origin'}
+          scope="profile email https://www.googleapis.com/auth/drive"
         />
       </div>
 

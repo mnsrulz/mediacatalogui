@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { apiClient } from "../ApiClient/MediaCatalogNetlifyClient";
-import { Treebeard } from 'react-treebeard';
 import axios from 'axios';
 import { CollapsableListView } from './CollapsableListView';
 const prettyBytes = require('pretty-bytes');
 
 export const SourceExplorer = ({ mediaId, rootTitle }) => {
     const [sources, setSources] = useState([]);
+    const _ctx = {
+        mediaId,
+        rootTitle
+    }
 
     const [data, setData] = useState({});
     const [cursor, setCursor] = useState(false);
@@ -34,7 +37,10 @@ export const SourceExplorer = ({ mediaId, rootTitle }) => {
                     link: resolvedUrl.link,
                     children: [],
                     canExpand: !isPlayable,
-                    loaded: false
+                    loaded: false,
+                    parent: resolvedUrl.parent,
+                    fileName: resolvedUrl.title || fileName,
+                    _ctx
                 }
                 if (isPlayable) {
                     anotherdata.name = `${anotherdata.name} (${prettyBytes(parseInt(size) || 0)}) (${contentType})`;
@@ -51,24 +57,26 @@ export const SourceExplorer = ({ mediaId, rootTitle }) => {
 
     useEffect(() => {
         (async () => {
-            const allPlaylist = await apiClient.get(`items/${mediaId}/mediasources`);
+            const mediaSources = await apiClient.get(`items/${mediaId}/mediasources`);
 
             const d2 = {
                 name: rootTitle,
                 toggled: true,
                 children: [],
                 canExpand: true,
-                loaded: true
+                loaded: true,                
+                _ctx
             }
 
-            for (const itemData of allPlaylist.data) {
+            for (const itemData of mediaSources.data) {
                 const { webViewLink, renderedTitle } = itemData;
                 d2.children.push({
                     name: renderedTitle,
                     link: webViewLink,
                     children: [],
                     canExpand: true,
-                    loaded: false
+                    loaded: false,
+                    _ctx
                 });
             }
             setData(d2);
