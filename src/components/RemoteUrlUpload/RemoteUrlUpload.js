@@ -1,55 +1,41 @@
-import React from 'react';
-
+import React, { useEffect, useState } from 'react';
 import MUIDataTable from "mui-datatables";
-class myComponent extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            error: null,
-            isLoaded: false,
-            data: []
-        };
-    }
+import { apiClient } from "./../ApiClient/MediaCatalogNetlifyClient";
+const dayjs = require('dayjs');
+var relativeTime = require('dayjs/plugin/relativeTime')
+dayjs.extend(relativeTime);
 
-    async componentDidMount() {
-        var headers = new Headers();
-        const idToken = JSON.parse(localStorage.token).tokenId;
-        headers.append('Authorization', 'Bearer ' + idToken);
-        const apiUrl = 'https://mediacatalog.netlify.app/.netlify/functions/server/remoteUrlUploadRequest';
-        const response = await fetch(apiUrl, { headers: headers });
 
-        const tempdata = await response.json();
-        console.log(tempdata);
+export const RemoteUrlUploadRequestList = () => {
+    const [isLoading, setIsLoading] = useState(true);
+    const [rows, setRows] = useState([]);
+    useEffect(() => {
+        (async () => {
+            const response = await apiClient.get('/remoteUrlUploadRequest');
+            setRows(response.data);
+            setIsLoading(false);
+        })();
+    }, []);
 
-        this.setState({
-            isLoaded: true,
-            data: tempdata
-        });
-
-    }
-    render() {
-        const columns = ["ts", "requestId", "fileName", "sequence", "status"];
-        const options = {
-            filterType: 'checkbox',
-            download: false,
-            print: false
-        };
-
-        const { error, isLoaded, data} = this.state;
-
-        if (error) {
-            return <div>Error: {error.message}</div>;
-        } else if (!isLoaded) {
-            return <div>Loading...</div>;
-        } else {
-            return <MUIDataTable
-                title={"Remote Url Upload Requests"}
-                data={data}
-                columns={columns}
-                options={options}
-            />;
+    const columns = [{
+        name: "ts", options: {
+            customBodyRenderLite: (dataIndex) => dayjs(rows[dataIndex].ts).fromNow()
         }
+    }, "requestId", "fileName", "sequence", "status"];
+    const options = {
+        filterType: 'checkbox',
+        download: false,
+        print: false
+    };
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    } else {
+        return <MUIDataTable
+            title={"Remote Url Upload Requests"}
+            data={rows}
+            columns={columns}
+            options={options}
+        />;
     }
 }
-
-export default myComponent;

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { apiClient } from '../../ApiClient/MediaCatalogNetlifyClient';
 
 
-export const FinalStep = ({ fileUrl, selectedFiles, parentUrl, title, year, mediaType }) => {
+export const FinalStep = ({ fileUrl, selectedFiles, parentUrl, title, year, mediaType, rawUpload }) => {
     const [error, setError] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
     const accessToken = JSON.parse(localStorage.token).accessToken;
@@ -16,7 +16,8 @@ export const FinalStep = ({ fileUrl, selectedFiles, parentUrl, title, year, medi
                 title, 
                 year,
                 mediaType,
-                accessToken
+                accessToken,
+                rawUpload
             };
             const response = await apiClient.post('remoteUrlUploadRequest', payload);            
             setIsLoaded(true);

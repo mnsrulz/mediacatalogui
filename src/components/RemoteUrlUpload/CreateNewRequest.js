@@ -95,6 +95,7 @@ export const CreateNewRequest = () => {
                     mediaType={mediaType}
                     title={title}
                     year={year}
+                    rawUpload={rawUpload}
                 />;
             default:
                 return 'unknown step'
