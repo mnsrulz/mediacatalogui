@@ -90,10 +90,10 @@ const RemoteUploadRequestList = ({ requestId, status }) => {
                 } else if (row.status === 'running') {
                     const lastProgressSinceMinutes = row.progress && dayjs(dayjs()).diff(row.progress.updated, 'm');
                     return <div>
-                        {(lastProgressSinceMinutes > 1) &&
+                        {(lastProgressSinceMinutes > 1) ?
                             <Button size='small' onClick={() => handleOnRequeueClick(value)} variant="text" color="primary" disableElevation>ReRun
                                 <RequestProgressBar progress={row.progress} />
-                            </Button>
+                            </Button>: <RequestProgressBar progress={row.progress} />
                         }
                     </div>
                 }
