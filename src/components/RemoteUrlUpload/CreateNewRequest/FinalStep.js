@@ -1,4 +1,6 @@
+import { Button } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { apiClient } from '../../ApiClient/MediaCatalogNetlifyClient';
 
 
@@ -6,6 +8,7 @@ export const FinalStep = ({ fileUrl, selectedFiles, parentUrl, title, year, medi
     const [error, setError] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
     const accessToken = JSON.parse(localStorage.token).accessToken;
+    const [requestId, setRequestId] = useState();
     useEffect(() => {
         (async () => {
             const files = selectedFiles.map(i => i.path);
@@ -13,23 +16,24 @@ export const FinalStep = ({ fileUrl, selectedFiles, parentUrl, title, year, medi
                 fileUrl,
                 parentUrl,
                 files,
-                title, 
+                title,
                 year,
                 mediaType,
                 accessToken,
                 rawUpload
             };
-            const response = await apiClient.post('remoteUrlUploadRequest', payload);            
+            const response = await apiClient.post('remoteUrlUploadRequest', payload);
+            setRequestId(response.data.id);
             setIsLoaded(true);
         })()
     }, [selectedFiles, fileUrl]);
-    
+
     if (error) {
         return <div>Error: {error.message}</div>;
     } else if (!isLoaded) {
         return <div>Submitting Request...</div>;
     } else {
-        return <span>Success!</span>;
+        return <span>Success! <Button component={Link} to={`/remoteuploads/${requestId}`}>View Request</Button></span>;
     }
 }
 

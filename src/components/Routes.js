@@ -37,6 +37,13 @@ const Routes = [
         icon: MovieIcon
     },
     {
+        path: '/remoteuploads/:requestId',
+        sidebarName: 'Remote Url Upload',
+        component: RemoteUrlUploadRequestList,
+        icon: CloudUploadIcon,
+        hide: true
+    },
+    {
         path: '/remoteuploads',
         sidebarName: 'Remote Url Upload',
         component: RemoteUrlUploadRequestList,
