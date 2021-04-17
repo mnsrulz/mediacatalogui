@@ -39,7 +39,7 @@ export const MediaSourceListComponent = () => {
         setRows(updatedRows);
     };
 
-    const columns: GridColumns = [
+    const columns = [
         { field: 'renderedTitle', headerName: 'Title', width: 340, sortable: false, flex: 1 },
         {
             field: 'parserInfo', headerName: 'Parser Title', sortable: false, width: 280, renderCell: ({ value, row }) => {
