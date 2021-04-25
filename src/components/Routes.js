@@ -5,7 +5,6 @@ import { RemoteUrlUploadRequestList } from './RemoteUrlUpload/RemoteUrlUpload';
 import { PlaylistPage } from './Playlist/playlistComponent';
 import { CreateNewRequest } from './RemoteUrlUpload/CreateNewRequest';
 import CreateMovieByImdb from './CreateMovie/CreateMovieByImdb';
-import { MediaSourceExplorerComponent } from './MediaSourceExplorer/MediaSourceExplorerComponent';
 import { MediaSourceListComponent } from './MediaSourceList/MediaSourceListComponent';
 
 import DashboardIcon from '@material-ui/icons/Dashboard';
@@ -73,13 +72,6 @@ const Routes = [
         sidebarName: 'New Movie by IMDB Id',
         component: CreateMovieByImdb,
         icon: ShoppingCartIcon,
-        hide: true
-    },
-    {
-        path: '/explorer/:sourceid',
-        sidebarName: 'Media Source Explorer',
-        component: MediaSourceExplorerComponent,
-        icon: AccountTreeIcon,
         hide: true
     },
     {

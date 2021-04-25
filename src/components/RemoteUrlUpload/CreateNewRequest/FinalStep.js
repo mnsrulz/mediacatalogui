@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { apiClient } from '../../ApiClient/MediaCatalogNetlifyClient';
 
 
-export const FinalStep = ({ fileUrl, selectedFiles, parentUrl, title, year, mediaType, rawUpload }) => {
+export const FinalStep = ({ fileUrl, selectedFiles, parentUrl, title, year, mediaType, rawUpload, fileHeaders }) => {
     const [error, setError] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
     const accessToken = JSON.parse(localStorage.token).accessToken;
@@ -20,7 +20,8 @@ export const FinalStep = ({ fileUrl, selectedFiles, parentUrl, title, year, medi
                 year,
                 mediaType,
                 accessToken,
-                rawUpload
+                rawUpload,
+                fileUrlHeaders: fileHeaders
             };
             const response = await apiClient.post('remoteUrlUploadRequest', payload);
             setRequestId(response.data.id);

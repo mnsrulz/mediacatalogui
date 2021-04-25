@@ -7,7 +7,7 @@ import { FinalStep } from './CreateNewRequest/FinalStep';
 import { apiClient } from '../ApiClient/MediaCatalogNetlifyClient';
 import { TextField, Paper, Typography, Stepper, Step, StepLabel, StepContent, Checkbox, FormControlLabel } from '@material-ui/core';
 import { useLocation } from 'react-router-dom';
-
+import axios from 'axios';
 // import FormInput from "./../Controls/index";
 
 function useQuery() {
@@ -48,13 +48,14 @@ export const CreateNewRequest = () => {
     const [mediaType, setMediaType] = useState();
     const [title, setTitle] = useState();
     const [year, setYear] = useState();
+    const [fileHeaders, setFileHeaders] = useState({});
 
     const mediaId = query.get('mediaId');
     const [activeStep, setActiveStep] = useState(0);
     const [fileUrl, setFileUrl] = useState(query.get('link'));
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [rawUpload, setRawUpload] = useState(true);
-    const fileNameExtension = fileName.split('.').pop();
+    const fileNameExtension = fileName && fileName.split('.').pop();
 
     useEffect(() => {
         if (mediaId) {
@@ -67,6 +68,23 @@ export const CreateNewRequest = () => {
             })();
         }
     }, [mediaId]);
+
+    useEffect(() => {
+        if (parentUrl) {
+            (async () => {
+                const utocall = `https://nurlresolver.netlify.app/.netlify/functions/server/resolve?m=true&q=${encodeURIComponent(parentUrl)}`;
+                const response = await axios.get(utocall);
+                if (response.data.length === 1) {
+                    const { headers, title, link } = response.data[0];
+                    setFileName(title);
+                    setFileUrl(link);
+                    setFileHeaders(headers);                    
+                }else{
+                    alert('invalid response received!')
+                }
+            })();
+        }
+    }, [parentUrl]);
 
     const handleFileSelection = (e) => {
         setSelectedFiles(e);
@@ -83,6 +101,7 @@ export const CreateNewRequest = () => {
                     <p>Media Type: {mediaType}</p>
                     <p>Title: {title}</p>
                     <p>Year: {year}</p>
+                    <p>{JSON.stringify(fileHeaders)}</p>
                     <FormControlLabel control={<Checkbox name="rawUpload"
                         checked={rawUpload}
                         onChange={ev => setRawUpload(ev.target.checked)}
@@ -96,6 +115,7 @@ export const CreateNewRequest = () => {
                     title={title}
                     year={year}
                     rawUpload={rawUpload}
+                    fileHeaders={fileHeaders}
                 />;
             default:
                 return 'unknown step'
