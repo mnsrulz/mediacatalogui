@@ -5,6 +5,7 @@ import { IconButton, Menu, MenuItem } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { PlaylistSelectionDialog } from '../MediaCard/PlaylistSelectionDialog';
 import { ViewSourceDialog } from '../MediaCard/ViewSourceDialog';
+import React from "react";
 
 
 export const NewMovieCard = ({ movie }) => {

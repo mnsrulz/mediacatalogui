@@ -11,6 +11,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import MovieIcon from '@material-ui/icons/Movie';
 import TvIcon from '@material-ui/icons/Tv';
+import React from 'react';
 
 const useStyles = makeStyles((theme) => ({
     searchbar: {

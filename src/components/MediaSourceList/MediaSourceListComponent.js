@@ -39,6 +39,14 @@ export const MediaSourceListComponent = () => {
         setRows(updatedRows);
     };
 
+    const fxhandleMediaSourceWithdrawl = (mediaSourceId) => {
+        const updatedRows = rows.map(x => {
+            x.id === mediaSourceId && (x.mediaItemId = null);
+            return x;
+        })
+        setRows(updatedRows);
+    };
+
     const columns = [
         { field: 'renderedTitle', headerName: 'Title', width: 340, sortable: false, flex: 1 },
         {
@@ -48,6 +56,7 @@ export const MediaSourceListComponent = () => {
                     mediaSourceId={row.id}
                     mediaItemId={row.mediaItemId}
                     handleMediaAssignment={fxhandleMediaAssignment}
+                    handleMediaSourceWithdrawl={fxhandleMediaSourceWithdrawl}
                 />
             }
         },

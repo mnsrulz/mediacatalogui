@@ -1,13 +1,14 @@
-import { Avatar, Box, Card, CardContent, CardHeader, CardMedia, Chip, Paper, Tooltip, Typography } from '@material-ui/core';
+import { Avatar, Chip, IconButton, Tooltip } from '@material-ui/core';
 import DoneIcon from '@material-ui/icons/Done';
 import { useEffect, useState } from 'react'
-import axios from 'axios'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import { apiClient } from '../ApiClient/MediaCatalogNetlifyClient';
 import { tmdbClient } from '../ApiClient/TmdbClient'
 import { SearchMovieDialog } from './SearchMovieDialog'
 import { MiniPoster } from './MiniPoster';
 import { SimilarMovieAssign } from './SimilarMovieAssign';
+import React from 'react';
+import ClearIcon from '@material-ui/icons/Clear';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -41,6 +42,9 @@ const useStyles = makeStyles((theme) => ({
     posterMedia: {
         height: 0,
         paddingTop: '56.25%', // 16:9
+    },
+    removeIcon: {
+        margin: theme.spacing(1),
     }
 }));
 
@@ -53,7 +57,7 @@ const LightTooltip = withStyles((theme) => ({
     },
 }))(Tooltip);
 
-export const MovieFetchComponent = ({ value, isTv, mediaSourceId, mediaItemId, handleMediaAssignment
+export const MovieFetchComponent = ({ value, isTv, mediaSourceId, mediaItemId, handleMediaAssignment, handleMediaSourceWithdrawl
 }) => {
     //const posterSize = 'w185';  //w92
     const avatarSize = 'w92';  //w92
@@ -113,7 +117,7 @@ export const MovieFetchComponent = ({ value, isTv, mediaSourceId, mediaItemId, h
         try {
             const response = await apiClient.get(`/items/byExternalId/${id}?type=tmdb`);
             mediaItemId = response.data.id;
-        } catch (error) {            
+        } catch (error) {
             const response = await apiClient.post(`items/byExternalId/${id}?type=tmdb&tmdbHint=${isthisitemtv ? 'tv' : 'movie'}`);
             mediaItemId = response.data.id;
         }
@@ -146,6 +150,11 @@ export const MovieFetchComponent = ({ value, isTv, mediaSourceId, mediaItemId, h
         }
     }
 
+    const handleRemoveAssociation = async () => {
+        await apiClient.delete(`mediasources/${mediaSourceId}/mediaItemId/${mediaItemId}`);
+        handleMediaSourceWithdrawl(mediaSourceId);
+    }
+
     const miniPoster = <MiniPoster title={title} backpath={backdropPath} isTv={isTv} year={year} posterPath={posterPath} />
     const chip = <Chip
         size='medium'
@@ -164,6 +173,9 @@ export const MovieFetchComponent = ({ value, isTv, mediaSourceId, mediaItemId, h
                 items={similarMediaResults}
                 handleSelect={handleSelectAssignMovieDialog} />
             <span>{mediaItemId}</span>
+            <IconButton color="primary" aria-label="remove link" size="small" className={classes.removeIcon} onClick={handleRemoveAssociation}>
+                <ClearIcon fontSize="small" />
+            </IconButton>
         </div>
     } else if (loading) {
         return <div>Loading...</div>;

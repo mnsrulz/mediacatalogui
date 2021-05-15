@@ -1,7 +1,6 @@
-import { Avatar, Box, Card, CardHeader, CardMedia, IconButton, Menu, MenuItem, Typography } from '@material-ui/core';
+import { Avatar, Box, Card, CardHeader, CardMedia, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles'
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { useState } from 'react';
+import React from 'react';
 
 const useStyles = makeStyles((theme) => ({
     card: {
@@ -127,25 +126,5 @@ export const MiniPoster = ({ posterPath, backpath, title, year, isTv, tagline, m
                 />
             </Card>            
         </div>
-    )
-}
-
-const Mymenulist = () => {
-    const [show, setShow] = useState(false);
-    return (
-        <div>
-            <IconButton onClick={setShow(true)}>
-                <MoreVertIcon />
-            </IconButton>
-            <Menu open={show} onClose={() => setShow(false)}>
-                <MenuItem onClick={() => { alert('you click me?') }}>
-                    Playlist
-            </MenuItem>
-                <MenuItem onClick={() => { alert('you click me?') }}>
-                    Info
-            </MenuItem>
-            </Menu>
-        </div>
-
     )
 }
