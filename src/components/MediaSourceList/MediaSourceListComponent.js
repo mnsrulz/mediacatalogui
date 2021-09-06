@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { DataGrid, GridColumns } from '@material-ui/data-grid';
+import { DataGrid } from '@material-ui/data-grid';
 import { apiClient } from '../ApiClient/MediaCatalogNetlifyClient'
-import { debounce, TextField } from '@material-ui/core';
+import { debounce, Divider, IconButton, InputBase, MenuItem, Paper, Select } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import SourceType from "./SourceTypeComponent";
 import { MovieFetchComponent } from "./MovieFetchComponent";
-import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
+import SearchIcon from '@material-ui/icons/Search';
 
 const dayjs = require('dayjs');
 var relativeTime = require('dayjs/plugin/relativeTime')
@@ -14,6 +14,24 @@ dayjs.extend(relativeTime);
 const useStyles = makeStyles((theme) => ({
     searchbar: {
         marginBottom: theme.spacing(3),
+    },
+    root: {
+        padding: '2px 8px 2px 16px',
+        display: 'flex',
+        alignItems: 'center',
+        width: '100%',
+        marginBottom: theme.spacing(3),
+    },
+    input: {
+        marginLeft: theme.spacing(1),
+        flex: 1,
+    },
+    iconButton: {
+        padding: '8px 8px'
+    },
+    divider: {
+        height: 28,
+        margin: 4,
     },
 }));
 
@@ -92,18 +110,27 @@ export const MediaSourceListComponent = () => {
         setPage(page);
     }
 
+    const handlePendingSelectionChange = (event) => {
+        setPendingSelection(event.target.value);
+    };
+
     return <div>
-        <TextField label="Search" placeholder="Search" fullWidth
-            onChange={debounce(handleOnChange, 250)}
-            defaultValue={search} className={classes.searchbar} />
-        <ToggleButtonGroup value={pendingSelection} exclusive onChange={(ev, val) => setPendingSelection(val)}>
-            <ToggleButton value="All">
-                All
-            </ToggleButton>
-            <ToggleButton value="Pending" >
-                Pending
-            </ToggleButton>
-        </ToggleButtonGroup>
+        <Paper component="form" className={classes.root} >
+            <Select
+                value={pendingSelection}
+                onChange={handlePendingSelectionChange}
+            >
+                <MenuItem value={'All'}>All</MenuItem>
+                <MenuItem value={'Pending'}>Pending</MenuItem>
+            </Select>
+            <Divider className={classes.divider} orientation="vertical" />
+            <InputBase autoFocus className={classes.input} placeholder="Search"
+                onChange={debounce(handleOnChange, 250)}
+                defaultValue={search} />
+            <IconButton type="submit" className={classes.iconButton} aria-label="search">
+                <SearchIcon />
+            </IconButton>
+        </Paper>
 
         <DataGrid
             page={page}
