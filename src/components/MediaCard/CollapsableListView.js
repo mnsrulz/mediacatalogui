@@ -10,6 +10,8 @@ import Backup from '@material-ui/icons/Backup';
 import { Avatar, CircularProgress, IconButton, ListItemAvatar, ListItemSecondaryAction } from '@material-ui/core';
 import { deepPurple } from '@material-ui/core/colors';
 import { Link } from 'react-router-dom';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
+
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
@@ -50,6 +52,16 @@ export const CollapsableListView = ({ data, handleToggle }) => {
         if (data.canExpand) handleToggle(data, open);
     };
 
+    const handleCopyClipboard = () => {
+        navigator.clipboard.writeText(data.link);
+    }
+
+    const CopyToClipboardAction = () => {
+        return <IconButton size={'small'}>
+            <FileCopyIcon onClick={handleCopyClipboard} />
+        </IconButton>
+    }
+
     const SecondaryAction = () => {
         const { canExpand, loading } = data;
         if (canExpand) {
@@ -80,6 +92,7 @@ export const CollapsableListView = ({ data, handleToggle }) => {
             </ListItemAvatar>
             <ListItemText primary={data.name} />
             <ListItemSecondaryAction>
+                <CopyToClipboardAction />
                 <SecondaryAction />
             </ListItemSecondaryAction>
         </ListItem>

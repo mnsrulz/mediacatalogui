@@ -12,12 +12,8 @@ export const SourceExplorer = ({ mediaId, rootTitle }) => {
     }
 
     const [data, setData] = useState({});
-    const [cursor, setCursor] = useState(false);
 
     const onToggle = async (node, toggled) => {
-        if (cursor) {
-            cursor.active = false;
-        }
         node.active = true;
         if (!node.loading && !node.loaded) {
             node.loading = true;
@@ -51,7 +47,6 @@ export const SourceExplorer = ({ mediaId, rootTitle }) => {
         } else if (node.children) {
             node.toggled = toggled;
         }
-        setCursor(node);
         setData(Object.assign({}, data));
     }
 
@@ -64,7 +59,7 @@ export const SourceExplorer = ({ mediaId, rootTitle }) => {
                 toggled: true,
                 children: [],
                 canExpand: true,
-                loaded: true,                
+                loaded: true,
                 _ctx
             }
 
