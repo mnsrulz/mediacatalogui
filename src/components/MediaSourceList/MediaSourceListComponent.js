@@ -30,9 +30,15 @@ const useStyles = makeStyles((theme) => ({
         padding: '8px 8px'
     },
     divider: {
-        height: 28,
-        margin: 4,
+        height: 32,        
+        marginLeft: theme.spacing(1)
     },
+    searchDropdownSelect: {
+        '&:focus': {
+            backgroundColor: 'white'
+        }        
+    },
+
 }));
 
 
@@ -117,6 +123,12 @@ export const MediaSourceListComponent = () => {
     return <div>
         <Paper component="form" className={classes.root} >
             <Select
+                variant='standard'
+                //className={classes.searchDropdownSelect}
+                classes={{ 
+                    //root: classes.searchDropdown,
+                    select: classes.searchDropdownSelect
+                }}
                 value={pendingSelection}
                 onChange={handlePendingSelectionChange}
             >
