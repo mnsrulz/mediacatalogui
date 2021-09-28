@@ -14,7 +14,7 @@
     "axios": "^0.21.1",
     "bloodhound-js": "^1.2.3",
     "clone": "^2.1.2",
-    "dayjs": "^1.10.4",
+    "dayjs": "^1.10.7",
     "jquery": "^3.5.1",
     "lodash": "^4.17.21",
     "material-ui-icons": "^1.0.0-beta.36",
