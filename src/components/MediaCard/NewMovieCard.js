@@ -4,7 +4,7 @@ import { MiniPoster } from "../MediaSourceList/MiniPoster";
 import { IconButton, Menu, MenuItem } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { PlaylistSelectionDialog } from '../MediaCard/PlaylistSelectionDialog';
-import { ViewSourceDialog } from '../MediaCard/ViewSourceDialog';
+import { ViewSourceDialog, ViewExternalIdDialog } from '../MediaCard/ViewSourceDialog';
 import React from "react";
 
 
@@ -12,6 +12,7 @@ export const NewMovieCard = ({ movie }) => {
 
     const [showPlaylistSelectionDialog, setShowPlaylistSelectionDialog] = useState(false);
     const [showViewSourceDialog, setShowViewSourceDialog] = useState(false);
+    const [showExternalIdDialog, setShowExternalIdDialog] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
 
     const handleClick = (event) => {
@@ -25,7 +26,12 @@ export const NewMovieCard = ({ movie }) => {
 
     const handleViewSourcesClick = () => {
         setAnchorEl(null);
-        setShowViewSourceDialog(true)
+        setShowViewSourceDialog(true);
+    }
+
+    const handleViewExternalIdsClick = () => {
+        setAnchorEl(null);
+        setShowExternalIdDialog(true);
     }
 
     const action = <div>
@@ -39,6 +45,9 @@ export const NewMovieCard = ({ movie }) => {
             <MenuItem onClick={handleViewSourcesClick}>
                 View Sources
             </MenuItem>
+            <MenuItem onClick={handleViewExternalIdsClick}>
+                View External Ids
+            </MenuItem>
         </Menu>
     </div>
 
@@ -51,6 +60,14 @@ export const NewMovieCard = ({ movie }) => {
         mediaId={movie.id}
         rootTitle={movie.title}
         onClose={() => { setShowViewSourceDialog(false) }}
+    />
+
+    const showViewExternalIdEl = <ViewExternalIdDialog open={showExternalIdDialog}
+        mediaId={movie.id}
+        rootTitle={movie.title}
+        tmdbId={movie.tmdbId}
+        imdbId={movie.imdbId}
+        onClose={() => { setShowExternalIdDialog(false) }}
     />
 
 
@@ -68,5 +85,6 @@ export const NewMovieCard = ({ movie }) => {
         />
         {playlistEl}
         {showViewSourceEl}
+        {showViewExternalIdEl}
     </div>
 }

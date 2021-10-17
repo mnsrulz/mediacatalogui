@@ -39,3 +39,37 @@ export const ViewSourceDialog = ({ open, mediaId, rootTitle, onClose }) => {
         return <div></div>
     }
 }
+
+export const ViewExternalIdDialog = ({ open, mediaId, rootTitle, tmdbId, imdbId, onClose }) => {
+    const classes = useStyles();
+    const theme = useTheme();
+    const fullScreenDialog = useMediaQuery(theme.breakpoints.down('xs'));
+
+    const assignImdbId = () => {
+
+    };
+
+    if (open) {
+        return (<Dialog
+            fullScreen={fullScreenDialog}
+            open={open}
+            onClose={onClose}
+            fullWidth={true}
+            classes={{ paper: !fullScreenDialog && classes.dialogPaper }}
+            aria-labelledby="responsive-dialog-title">
+            <DialogTitle>{rootTitle} : External Sources</DialogTitle>
+            <DialogContent dividers classes={{ root: classes.dialogContent }}>
+                
+                Tmdb: {tmdbId}
+                    <br/>
+                Imdb: {imdbId}
+            </DialogContent>
+            <DialogActions>
+                <Button color="primary" onClick={onClose}>Cancel</Button>
+            </DialogActions>
+        </Dialog>
+        );
+    } else {
+        return <div></div>
+    }
+}
