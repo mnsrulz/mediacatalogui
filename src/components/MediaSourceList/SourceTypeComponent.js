@@ -6,6 +6,8 @@ export default function SourceTypeComponent({ value }) {
                 return 'HH'                
             case 'extramovies':
                 return 'EM'                
+            case 'movipk':
+                return 'MPK'                
             default:
                 return value                
         }
