@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Login from '../Login/Login';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
@@ -16,11 +16,11 @@ import Container from '@material-ui/core/Container';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 
-import SideNavBar from '../SideNavBar/SideNavBar';
+// import SideNavBar from '../SideNavBar/SideNavBar';
 
 import NotFound from '../NotFound/NotFound';
 
-import Routes from '../Routes';
+import { AppRoutes } from '../Routes';
 
 import useToken from './useToken';
 import { Copyright } from '../Copyright/Copyright';
@@ -28,6 +28,8 @@ import { ResponsiveDrawer } from './ResponsiveDrawer';
 
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
+import Dashboard from 'components/Dashboard/Dashboard';
+import { MediaSourceListComponent } from 'components/MediaSourceList/MediaSourceListComponent';
 
 
 const drawerWidth = 240;
@@ -129,7 +131,7 @@ function App() {
             </IconButton>
             <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
               Media Catalog Admin
-          </Typography>
+            </Typography>
           </Toolbar>
         </AppBar>
         <BrowserRouter>
@@ -137,27 +139,11 @@ function App() {
           <main className={classes.content}>
             <div className={classes.appBarSpacer} />
             <Container maxWidth="lg" className={classes.container}>
-              <Switch>
-                <Route
-                  exact
-                  path="/"
-                  render={() => {
-                    return (
-                      <Redirect to="/dashboard" />
-                    )
-                  }}
-                />
-                {Routes.map((prop, key) => {
-                  return (
-                    <Route path={prop.path} key={key}>
-                      <prop.component />
-                    </Route>
-                  );
-                })}
-                <Route>
-                  <NotFound />
-                </Route>
-              </Switch>
+              <Routes>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/source" element={<MediaSourceListComponent />} />
+                <Route path="/" element={<Navigate replace to="/dashboard" />} />
+              </Routes>
               <Box pt={4}>
                 <Copyright />
               </Box>

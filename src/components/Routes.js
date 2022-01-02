@@ -15,7 +15,7 @@ import SubscriptionsIcon from '@material-ui/icons/Subscriptions';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
 
-const Routes = [
+export const AppRoutes = [
     {
         path: '/dashboard',
         sidebarName: 'Dashboard',
@@ -81,5 +81,3 @@ const Routes = [
         icon: AccountTreeIcon
     }
 ];
-
-export default Routes;

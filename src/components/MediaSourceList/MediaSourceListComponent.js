@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 export const MediaSourceListComponent = () => {
-    const [page, setPage] = useState(0);
+    const [currentPage, setPage] = useState(0);
     const [pageSize] = useState(20);
     const [rows, setRows] = useState([]);
     const [rowCount, setRowCount] = useState(0);
@@ -75,13 +75,14 @@ export const MediaSourceListComponent = () => {
         { field: 'renderedTitle', headerName: 'Title', width: 340, sortable: false, flex: 1 },
         {
             field: 'parserInfo', headerName: 'Parser Title', sortable: false, width: 280, renderCell: ({ value, row }) => {
-                return <MovieFetchComponent
-                    value={value?.title || row.renderedTitle} isTv={value?.isTv}
-                    mediaSourceId={row.id}
-                    mediaItemId={row.mediaItemId}
-                    handleMediaAssignment={fxhandleMediaAssignment}
-                    handleMediaSourceWithdrawl={fxhandleMediaSourceWithdrawl}
-                />
+                return <div>no info...</div>
+                // return <MovieFetchComponent
+                //     value={value?.title || row.renderedTitle} isTv={value?.isTv}
+                //     mediaSourceId={row.id}
+                //     mediaItemId={row.mediaItemId}
+                //     handleMediaAssignment={fxhandleMediaAssignment}
+                //     handleMediaSourceWithdrawl={fxhandleMediaSourceWithdrawl}
+                // />
             }
         },
         {
@@ -104,12 +105,12 @@ export const MediaSourceListComponent = () => {
         (async () => {
             setLoading(true);
             const onlyPending = pendingSelection === 'Pending';
-            const response = await apiClient.get(`/mediasources?pageSize=${pageSize}&pageNumber=${page + 1}&q=${search}&onlyPendingMediaAssignment=${onlyPending}`);
+            const response = await apiClient.get(`/mediasources?pageSize=${pageSize}&pageNumber=${currentPage + 1}&q=${search}&onlyPendingMediaAssignment=${onlyPending}`);
             setRowCount(response.data.total);
             setRows(response.data.items);
             setLoading(false);
         })();
-    }, [page, search, pendingSelection, pageSize]);
+    }, [currentPage, search, pendingSelection, pageSize]);
 
     const handlePageChange = (p) => {
         setPage(p);
@@ -144,7 +145,7 @@ export const MediaSourceListComponent = () => {
         </Paper>
 
         <DataGrid
-            page={page}
+            page={currentPage}
             autoHeight={true}
             rows={rows}
             columns={columns}
