@@ -111,9 +111,8 @@ export const MediaSourceListComponent = () => {
         })();
     }, [page, search, pendingSelection, pageSize]);
 
-    const handlePageChange = (params) => {
-        const { page } = params;
-        setPage(page);
+    const handlePageChange = (p) => {
+        setPage(p);
     }
 
     const handlePendingSelectionChange = (event) => {
