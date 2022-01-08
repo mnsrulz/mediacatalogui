@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 export const MediaSourceListComponent = () => {
-    const [currentPage, setPage] = useState(0);
+    const [page, setPage] = useState(0);
     const [pageSize] = useState(25);
     const [rows, setRows] = useState([]);
     const [rowCount, setRowCount] = useState(0);
@@ -104,12 +104,12 @@ export const MediaSourceListComponent = () => {
         (async () => {
             setLoading(true);
             const onlyPending = pendingSelection === 'Pending';
-            const response = await apiClient.get(`/mediasources?pageSize=${pageSize}&pageNumber=${currentPage + 1}&q=${search}&onlyPendingMediaAssignment=${onlyPending}`);
+            const response = await apiClient.get(`/mediasources?pageSize=${pageSize}&pageNumber=${page + 1}&q=${search}&onlyPendingMediaAssignment=${onlyPending}`);
             setRowCount(response.data.total);
             setRows(response.data.items);
             setLoading(false);
         })();
-    }, [currentPage, search, pendingSelection, pageSize]);
+    }, [page, search, pendingSelection, pageSize]);
 
     const handlePageChange = (p) => {
         setPage(p);
@@ -144,7 +144,7 @@ export const MediaSourceListComponent = () => {
         </Paper>
 
         <DataGrid
-            page={currentPage}
+            page={page}
             autoHeight={true}
             rows={rows}
             columns={columns}
