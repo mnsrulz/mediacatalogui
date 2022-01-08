@@ -140,8 +140,13 @@ function App() {
             <div className={classes.appBarSpacer} />
             <Container maxWidth="lg" className={classes.container}>
               <Routes>
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/source" element={<MediaSourceListComponent />} />
+                {
+                  AppRoutes.map(r=>{
+                    return <Route path={r.path} 
+                    key={r.sidebarName}
+                    element={<r.component />}/>
+                  })
+                }
                 <Route path="/" element={<Navigate replace to="/dashboard" />} />
               </Routes>
               <Box pt={4}>
