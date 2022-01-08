@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
-import { DialogActions, debounce, Tabs, Tab } from '@material-ui/core';
+import { DialogActions, debounce, Tabs, Tab, MenuItem } from '@material-ui/core';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { tmdbClient } from '../ApiClient/TmdbClient'
@@ -12,6 +11,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import MovieIcon from '@material-ui/icons/Movie';
 import TvIcon from '@material-ui/icons/Tv';
 import React from 'react';
+import { InputWithDropdownComponent } from './InputWithDropdownComponent';
 
 const useStyles = makeStyles((theme) => ({
     searchbar: {
@@ -30,6 +30,7 @@ export const SearchMovieDialog = ({ handleSelect, show, query, isTv }) => {
     const [searchTv, setSearchTv] = useState(isTv);
     const [results, setResults] = useState([]);
     const [selectedId, setSelectedId] = useState(0);
+    const [yearSelection, setyearSelection] = useState('All');
 
     const classes = useStyles();
     //const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -53,11 +54,10 @@ export const SearchMovieDialog = ({ handleSelect, show, query, isTv }) => {
     useEffect(() => {
         if (!searchQuery || !show) return;
         (async () => {
-            console.log(searchTv);
-            const { results } = await tmdbClient.search(searchQuery, searchTv);
+            const { results } = await tmdbClient.search(searchQuery, searchTv, yearSelection == 'All' ? '' : yearSelection);
             setResults(results);
         })();
-    }, [searchQuery, show, searchTv]);
+    }, [searchQuery, show, searchTv, yearSelection]);
 
     const [value, setValue] = useState(isTv ? 1 : 0);
 
@@ -66,6 +66,9 @@ export const SearchMovieDialog = ({ handleSelect, show, query, isTv }) => {
         setSearchTv(newValue === 1);
         setSelectedId(0);
     };
+
+    const now = new Date().getUTCFullYear();
+    const years = Array(now - (now - 100)).fill('').map((v, idx) => now - idx);
 
     return (<div>
         <Dialog open={show}
@@ -85,17 +88,17 @@ export const SearchMovieDialog = ({ handleSelect, show, query, isTv }) => {
                 </Tabs>
             </DialogTitle>
             <DialogContent dividers>
-                <TextField
-                    autoFocus
-                    margin="dense"
-                    label="Title"
+                <InputWithDropdownComponent
+                    pendingSelection={yearSelection}
+                    handlePendingSelectionChange={({ target }) => setyearSelection(target.value)}
                     defaultValue={searchQuery}
-                    fullWidth
-                    onChange={debounce(handleOnChange, 250)}
-                />
+                    onChange={debounce(handleOnChange, 250)} >
+                    <MenuItem value={'All'}>Year</MenuItem>
+                    {
+                        years.map(m => <MenuItem key={m} value={m}>{m}</MenuItem>)
+                    }
+                </InputWithDropdownComponent>
 
-                {/* <FormControlLabel control={<Checkbox defaultChecked={searchTv}
-                    onChange={handleSetTv} />} label="TV" /> */}
                 {
                     results && (<List component="nav">
                         {results.map((value) => {
@@ -118,10 +121,10 @@ export const SearchMovieDialog = ({ handleSelect, show, query, isTv }) => {
             <DialogActions>
                 <Button onClick={handleClose} color="primary">
                     Cancel
-          </Button>
+                </Button>
                 <Button onClick={handleItemSelectionClose} color="primary" disabled={selectedId === 0}>
                     Ok
-          </Button>
+                </Button>
             </DialogActions>
         </Dialog>
     </div>);

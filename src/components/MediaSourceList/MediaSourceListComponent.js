@@ -6,41 +6,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import SourceType from "./SourceTypeComponent";
 import { MovieFetchComponent } from "./MovieFetchComponent";
 import SearchIcon from '@material-ui/icons/Search';
+import { InputWithDropdownComponent } from './InputWithDropdownComponent';
 
 const dayjs = require('dayjs');
 var relativeTime = require('dayjs/plugin/relativeTime')
 dayjs.extend(relativeTime);
-
-const useStyles = makeStyles((theme) => ({
-    searchbar: {
-        marginBottom: theme.spacing(3),
-    },
-    root: {
-        padding: '2px 8px 2px 16px',
-        display: 'flex',
-        alignItems: 'center',
-        width: '100%',
-        marginBottom: theme.spacing(3),
-    },
-    input: {
-        marginLeft: theme.spacing(1),
-        flex: 1,
-    },
-    iconButton: {
-        padding: '8px 8px'
-    },
-    divider: {
-        height: 32,        
-        marginLeft: theme.spacing(1)
-    },
-    searchDropdownSelect: {
-        '&:focus': {
-            backgroundColor: 'white'
-        }        
-    },
-
-}));
-
 
 export const MediaSourceListComponent = () => {
     const [page, setPage] = useState(0);
@@ -49,8 +19,7 @@ export const MediaSourceListComponent = () => {
     const [rowCount, setRowCount] = useState(0);
     const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState('');
-    const [pendingSelection, setPendingSelection] = useState('Pending');
-    const classes = useStyles();
+    const [pendingSelection, setPendingSelection] = useState('Pending');    
 
     const fxhandleMediaAssignment = async (result) => {
         const updatedRows = rows.map(x => {
@@ -74,7 +43,7 @@ export const MediaSourceListComponent = () => {
     const columns = [
         { field: 'renderedTitle', headerName: 'Title', width: 340, sortable: false, flex: 1 },
         {
-            field: 'parserInfo', headerName: 'Parser Title', sortable: false, width: 280, renderCell: ({ value, row }) => {                
+            field: 'parserInfo', headerName: 'Parser Title', sortable: false, width: 280, renderCell: ({ value, row }) => {
                 return <MovieFetchComponent
                     value={value?.title || row.renderedTitle} isTv={value?.isTv}
                     mediaSourceId={row.id}
@@ -120,28 +89,14 @@ export const MediaSourceListComponent = () => {
     };
 
     return <div>
-        <Paper component="form" className={classes.root} >
-            <Select
-                variant='standard'
-                //className={classes.searchDropdownSelect}
-                classes={{ 
-                    //root: classes.searchDropdown,
-                    select: classes.searchDropdownSelect
-                }}
-                value={pendingSelection}
-                onChange={handlePendingSelectionChange}
-            >
-                <MenuItem value={'All'}>All</MenuItem>
-                <MenuItem value={'Pending'}>Pending</MenuItem>
-            </Select>
-            <Divider className={classes.divider} orientation="vertical" />
-            <InputBase autoFocus className={classes.input} placeholder="Search"
-                onChange={debounce(handleOnChange, 250)}
-                defaultValue={search} />
-            <IconButton type="submit" className={classes.iconButton} aria-label="search">
-                <SearchIcon />
-            </IconButton>
-        </Paper>
+        <InputWithDropdownComponent
+            pendingSelection={pendingSelection}
+            handlePendingSelectionChange={handlePendingSelectionChange}
+            defaultValue={search}
+            onChange={debounce(handleOnChange, 250)} >
+            <MenuItem value={'All'}>All</MenuItem>
+            <MenuItem value={'Pending'}>Pending</MenuItem>
+        </InputWithDropdownComponent>
 
         <DataGrid
             page={page}
