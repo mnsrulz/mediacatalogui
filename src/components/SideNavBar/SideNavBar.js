@@ -1,22 +1,22 @@
 import React from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { List, ListItemIcon, ListItemText, ListItem } from '@material-ui/core';
-import Routes from '../Routes';
+import {AppRoutes} from '../Routes';
 
-const SideNavBar = ({location, onListItemClick}) => {
+export const SideNavBar = ({location, handleSidebarSelection}) => {
   const activeRoute = (routeName) => {
     return location?.pathname === routeName ? true : false;
   }
 
   return (<div>
     <List>
-      {Routes.filter(x => !x.hide).map((prop, key) => {
+      {AppRoutes.filter(x => !x.hide).map((prop, key) => {
         return (
           <ListItem component={Link} button
             to={prop.navurl || prop.path}
             style={{ textDecoration: 'none' }}
             key={key}
-            onClick={onListItemClick}
+            onClick={handleSidebarSelection}
             selected={activeRoute(prop.path)}>
             <ListItemIcon>
               <prop.icon />
@@ -28,5 +28,3 @@ const SideNavBar = ({location, onListItemClick}) => {
     </List>
   </div>);
 }
-
-export default withRouter(SideNavBar);

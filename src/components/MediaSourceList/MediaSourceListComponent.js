@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const MediaSourceListComponent = () => {
     const [page, setPage] = useState(0);
-    const [pageSize] = useState(20);
+    const [pageSize] = useState(25);
     const [rows, setRows] = useState([]);
     const [rowCount, setRowCount] = useState(0);
     const [loading, setLoading] = useState(false);
@@ -74,7 +74,7 @@ export const MediaSourceListComponent = () => {
     const columns = [
         { field: 'renderedTitle', headerName: 'Title', width: 340, sortable: false, flex: 1 },
         {
-            field: 'parserInfo', headerName: 'Parser Title', sortable: false, width: 280, renderCell: ({ value, row }) => {
+            field: 'parserInfo', headerName: 'Parser Title', sortable: false, width: 280, renderCell: ({ value, row }) => {                
                 return <MovieFetchComponent
                     value={value?.title || row.renderedTitle} isTv={value?.isTv}
                     mediaSourceId={row.id}
