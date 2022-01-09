@@ -1,16 +1,19 @@
 import { Typography } from '@material-ui/core';
+import React from 'react';
 export default function SourceTypeComponent({ value }) {
     const getRenderValue = () => {
         switch (value) {
             case 'hdhub':
-                return 'HH'                
+                return 'HH'
             case 'extramovies':
-                return 'EM'                
+                return 'EM'
             case 'movipk':
-                return 'MPK'                
+                return 'MPK'
+            case '1337xhd':
+                return 'XHD'
             default:
-                return value                
+                return value
         }
-    }    
+    }
     return <Typography variant="body2" color="textSecondary">{getRenderValue()}</Typography>
 }

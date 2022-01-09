@@ -7,10 +7,11 @@ import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import Backup from '@material-ui/icons/Backup';
-import { Avatar, CircularProgress, IconButton, ListItemAvatar, ListItemSecondaryAction } from '@material-ui/core';
+import { Avatar, CircularProgress, IconButton, Icon, ListItemAvatar, ListItemSecondaryAction } from '@material-ui/core';
 import { deepPurple } from '@material-ui/core/colors';
 import { Link } from 'react-router-dom';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
+import Progress from '@material-ui/icons/AddCircle';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -30,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     },
     avatarWrapper: {
         minWidth: 0,
-        paddingRight: theme.spacing(2)
+        paddingRight: theme.spacing(1)
     }
 }));
 
@@ -66,9 +67,9 @@ export const CollapsableListView = ({ data, handleToggle }) => {
         const { canExpand, loading } = data;
         if (canExpand) {
             if (loading) {
-                return <CircularProgress size="1rem" />
+                return <IconButton disabled size='small'><CircularProgress size='1.5rem'/></IconButton>
             } else {
-                return <IconButton size={'small'}>
+                return <IconButton size='small'>
                     {open ? <ExpandLess onClick={handleClick} /> : <ExpandMore onClick={handleClick} />}
                 </IconButton>
             }
@@ -99,7 +100,7 @@ export const CollapsableListView = ({ data, handleToggle }) => {
         <Collapse in={open} timeout="auto" unmountOnExit className={classes.nested} >
             {
                 data?.children?.map((item) => {
-                    return <CollapsableListView data={item} handleToggle={handleToggle} />
+                    return <CollapsableListView key={item.link} data={item} handleToggle={handleToggle} />
                 })
             }
         </Collapse>

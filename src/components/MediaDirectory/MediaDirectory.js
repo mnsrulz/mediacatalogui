@@ -48,32 +48,34 @@ export default function MediaDirectory() {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
-      setAnchorEl(event.currentTarget);
+    setAnchorEl(event.currentTarget);
   };
 
   useEffect(() => {
+    const abortController = new AbortController();
     (async () => {
       const searchQuery = search;
       setLoading(true);
-      const result = await apiClient.get(`items?q=${searchQuery}`);
+      const result = await apiClient.get(`items?q=${searchQuery}`, { signal: abortController.signal });
       if (search === searchQuery) {
         setData(result.data);
         setLoading(false);
       }
     })();
+    return () => abortController.abort();
   }, [search]);
 
   return (
     <div>
       <Paper component="form" className={classes.root} >
         <InputBase className={classes.input} placeholder="Search"
-          onChange={debounce(handleOnChange, 250)}
+          onChange={handleOnChange}
           defaultValue={search} />
         <IconButton type="submit" className={classes.iconButton} aria-label="search">
           <SearchIcon />
         </IconButton>
         <Divider className={classes.divider} orientation="vertical" />
-        <IconButton color="primary" className={classes.iconButton} aria-label="menu" onClick={handleClick}> 
+        <IconButton color="primary" className={classes.iconButton} aria-label="menu" onClick={handleClick}>
           <MenuIcon />
         </IconButton>
         {/* <Menu anchorEl={anchorEl} onClose={() => setAnchorEl(null)} open={Boolean(anchorEl)} >

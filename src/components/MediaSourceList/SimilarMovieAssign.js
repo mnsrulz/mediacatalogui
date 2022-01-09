@@ -60,7 +60,6 @@ export const SimilarMovieAssign = ({ show, mediaItemId, query, handleSelect, ite
                         items && (<List>
                             {items.map((value) => {
                                 const labelId = `checkbox-list-label-${value.id}`;
-                                console.log('value is ', value);
                                 return (<ListItem key={value.id} button onClick={handleToggle(value.id)}>
                                     <ListItemIcon>
                                         <Checkbox

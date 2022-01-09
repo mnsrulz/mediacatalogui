@@ -46,8 +46,7 @@ export const SearchMovieDialog = ({ handleSelect, show, query, isTv }) => {
         });
     };
 
-    const handleOnChange = (event) => {
-        const { value } = event.target;
+    const handleOnChange = (value) => {
         setSearchQuery(value);
     };
 
@@ -90,9 +89,10 @@ export const SearchMovieDialog = ({ handleSelect, show, query, isTv }) => {
             <DialogContent dividers>
                 <InputWithDropdownComponent
                     pendingSelection={yearSelection}
-                    handlePendingSelectionChange={({ target }) => setyearSelection(target.value)}
+                    handlePendingSelectionChange={v => setyearSelection(v)}
                     defaultValue={searchQuery}
-                    onChange={debounce(handleOnChange, 250)} >
+                    showSearchIcon={false}
+                    onInputChange={handleOnChange} >
                     <MenuItem value={'All'}>Year</MenuItem>
                     {
                         years.map(m => <MenuItem key={m} value={m}>{m}</MenuItem>)

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Divider, IconButton, InputBase, MenuItem, Paper, Select } from '@material-ui/core';
+import { Divider, IconButton, InputBase, Paper, Select } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 
@@ -33,26 +33,32 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-export const InputWithDropdownComponent = ({children, pendingSelection, handlePendingSelectionChange, onChange, defaultValue}) => {
+export const InputWithDropdownComponent = ({ children, pendingSelection,
+    handlePendingSelectionChange,
+    onInputChange,
+    defaultValue,
+    showSearchIcon = true }) => {
     const classes = useStyles();
     return <Paper component="form" className={classes.root} >
         <Select
-            variant='standard'            
-            classes={{                
+            variant='standard'
+            classes={{
                 select: classes.searchDropdownSelect
             }}
             value={pendingSelection}
-            onChange={handlePendingSelectionChange}
-        >
+            onChange={ev => handlePendingSelectionChange(ev.target.value)}>
             {children}
         </Select>
         <Divider className={classes.divider} orientation="vertical" />
         <InputBase autoFocus className={classes.input} placeholder="Search"
-            onChange={onChange}
+            onChange={ev => onInputChange(ev.target.value)}
             defaultValue={defaultValue} />
-        <IconButton type="submit" className={classes.iconButton} aria-label="search">
-            <SearchIcon />
-        </IconButton>
+        {
+            showSearchIcon &&
+            <IconButton type="submit" className={classes.iconButton} aria-label="search" >
+                <SearchIcon />
+            </IconButton>
+        }
     </Paper>
 
 }

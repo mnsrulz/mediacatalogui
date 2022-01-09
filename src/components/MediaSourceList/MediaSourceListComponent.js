@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 import { apiClient } from '../ApiClient/MediaCatalogNetlifyClient'
-import { debounce, Divider, IconButton, InputBase, MenuItem, Paper, Select } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { MenuItem } from '@material-ui/core';
 import SourceType from "./SourceTypeComponent";
 import { MovieFetchComponent } from "./MovieFetchComponent";
-import SearchIcon from '@material-ui/icons/Search';
 import { InputWithDropdownComponent } from './InputWithDropdownComponent';
+import axios from 'axios';
 
 const dayjs = require('dayjs');
 var relativeTime = require('dayjs/plugin/relativeTime')
@@ -14,12 +13,12 @@ dayjs.extend(relativeTime);
 
 export const MediaSourceListComponent = () => {
     const [page, setPage] = useState(0);
-    const [pageSize] = useState(25);
+    const [pageSize, setPageSize] = useState(25);
     const [rows, setRows] = useState([]);
     const [rowCount, setRowCount] = useState(0);
     const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState('');
-    const [pendingSelection, setPendingSelection] = useState('Pending');    
+    const [pendingSelection, setPendingSelection] = useState('Pending');
 
     const fxhandleMediaAssignment = async (result) => {
         const updatedRows = rows.map(x => {
@@ -63,29 +62,32 @@ export const MediaSourceListComponent = () => {
     ];
 
 
-    const handleOnChange = (event) => {
-        const { value } = event.target;
+    const handleOnChange = (value) => {
         setPage(0);
         setSearch(value);
     };
 
     useEffect(() => {
+        const abortController = new AbortController();
         (async () => {
+            const searchQuery = search;
             setLoading(true);
             const onlyPending = pendingSelection === 'Pending';
-            const response = await apiClient.get(`/mediasources?pageSize=${pageSize}&pageNumber=${page + 1}&q=${search}&onlyPendingMediaAssignment=${onlyPending}`);
-            setRowCount(response.data.total);
-            setRows(response.data.items);
-            setLoading(false);
+            const response = await apiClient.get(`/mediasources?pageSize=${pageSize}&pageNumber=${page + 1}&q=${search}&onlyPendingMediaAssignment=${onlyPending}`, {
+                signal: abortController.signal,
+            });
+            if (abortController.signal.aborted) return;
+            if (search === searchQuery) {
+                setRowCount(response.data.total);
+                setRows(response.data.items);
+                setLoading(false);
+            }
         })();
+        return () => abortController.abort();
     }, [page, search, pendingSelection, pageSize]);
 
-    const handlePageChange = (p) => {
-        setPage(p);
-    }
-
-    const handlePendingSelectionChange = (event) => {
-        setPendingSelection(event.target.value);
+    const handlePendingSelectionChange = (value) => {
+        setPendingSelection(value);
     };
 
     return <div>
@@ -93,7 +95,7 @@ export const MediaSourceListComponent = () => {
             pendingSelection={pendingSelection}
             handlePendingSelectionChange={handlePendingSelectionChange}
             defaultValue={search}
-            onChange={debounce(handleOnChange, 250)} >
+            onInputChange={handleOnChange} >
             <MenuItem value={'All'}>All</MenuItem>
             <MenuItem value={'Pending'}>Pending</MenuItem>
         </InputWithDropdownComponent>
@@ -105,7 +107,8 @@ export const MediaSourceListComponent = () => {
             columns={columns}
             pageSize={pageSize}
             paginationMode='server'
-            onPageChange={handlePageChange}
+            onPageChange={setPage}
+            onPageSizeChange={setPageSize}
             loading={loading}
             rowCount={rowCount}
             checkboxSelection={false}
