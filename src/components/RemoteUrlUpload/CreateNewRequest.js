@@ -1,14 +1,12 @@
-import { React, useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from "@material-ui/core/Button";
-import ChooseFilesToUpload from './CreateNewRequest/ChooseFilesToUpload';
+import {ChooseFilesToUpload} from './CreateNewRequest/ChooseFilesToUpload';
 import { FinalStep } from './CreateNewRequest/FinalStep';
-import { apiClient } from '../ApiClient/MediaCatalogNetlifyClient';
+import { apiClient } from './../ApiClient/MediaCatalogNetlifyClient';
 import { TextField, Paper, Typography, Stepper, Step, StepLabel, StepContent, Checkbox, FormControlLabel } from '@material-ui/core';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
-// import FormInput from "./../Controls/index";
 
 function useQuery() {
     return new URLSearchParams(useLocation().search);
@@ -30,18 +28,10 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function getSteps() {
-    return ['Enter the file URL (any types including zip)', 'Choose Files to Upload', 'Finish'];
-}
-
 export const CreateNewRequest = () => {
-    const { control, register, handleSubmit, errors } = useForm();
-    const onSubmit = data => { alert('hello'); console.log(data); }
-
     const classes = useStyles();
     let query = useQuery();
 
-    // const [linkQueryParamValue, setLink] = useState(query.get('link') || '');
     const [fileName, setFileName] = useState(query.get('fileName') || '');
     const [parentUrl, setParentUrl] = useState(query.get('parent') || '');
 
