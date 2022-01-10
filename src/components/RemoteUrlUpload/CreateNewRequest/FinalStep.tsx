@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { apiClient } from '../../ApiClient/MediaCatalogNetlifyClient';
 
-export const FinalStep = ({ fileUrl, selectedFiles, parentUrl, title, year, mediaType, rawUpload, fileHeaders }) => {
+export const FinalStep = ({ fileUrl, selectedFiles, parentUrl, title, year, mediaType, rawUpload, fileHeaders }: FinalStepProps) => {
     const [error, setError] = useState('');
     const [isLoaded, setIsLoaded] = useState(false);
     const accessToken = JSON.parse(localStorage.token).accessToken;
@@ -39,4 +39,12 @@ export const FinalStep = ({ fileUrl, selectedFiles, parentUrl, title, year, medi
     } else {
         return <span>Success! <Button component={Link} to={`/remoteuploads/${requestId}`}>View Request</Button></span>;
     }
+}
+
+type FinalStepProps = {
+    fileUrl: string, 
+    selectedFiles: { path: string }[],
+    parentUrl: string, title: string
+    , year: string,
+    mediaType: string, rawUpload: boolean, fileHeaders: Record<string, string>
 }

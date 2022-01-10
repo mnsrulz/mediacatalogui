@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { List, ListItemIcon, ListItemText, ListItem } from '@material-ui/core';
-import {AppRoutes} from '../Routes';
+import { AppRoutes } from '../Routes';
 
-export const SideNavBar = ({location, handleSidebarSelection}) => {
-  const activeRoute = (routeName) => {
-    return location?.pathname === routeName ? true : false;
+export const SideNavBar = ({ location, handleSidebarSelection }:SideNavBarProps) => {
+  const activeRoute = (routeName: string) => {
+    return location === routeName ? true : false;
   }
 
   return (<div>
@@ -13,7 +13,7 @@ export const SideNavBar = ({location, handleSidebarSelection}) => {
       {AppRoutes.filter(x => !x.hide).map((prop, key) => {
         return (
           <ListItem component={Link} button
-            to={prop.navurl || prop.path}
+            to={prop.path}
             style={{ textDecoration: 'none' }}
             key={key}
             onClick={handleSidebarSelection}
@@ -27,4 +27,9 @@ export const SideNavBar = ({location, handleSidebarSelection}) => {
       })}
     </List>
   </div>);
+}
+
+type SideNavBarProps = { 
+  location: string, 
+  handleSidebarSelection: () => void 
 }

@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from "@material-ui/core/Button";
 import { ChooseFilesToUpload } from './CreateNewRequest/ChooseFilesToUpload';
 import { FinalStep } from './CreateNewRequest/FinalStep';
-import { apiClient } from './../ApiClient/MediaCatalogNetlifyClient';
+import { apiClient } from '../ApiClient/MediaCatalogNetlifyClient';
 import { TextField, Paper, Typography, Stepper, Step, StepLabel, StepContent, Checkbox, FormControlLabel } from '@material-ui/core';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
@@ -36,15 +36,15 @@ export const CreateNewRequest = () => {
     const [fileName, setFileName] = useState(query.get('fileName') || '');
     const [parentUrl, setParentUrl] = useState(query.get('parent') || '');
 
-    const [mediaType, setMediaType] = useState();
-    const [title, setTitle] = useState();
-    const [year, setYear] = useState();
+    const [mediaType, setMediaType] = useState('');
+    const [title, setTitle] = useState('');
+    const [year, setYear] = useState('');
     const [fileHeaders, setFileHeaders] = useState({});
 
     const mediaId = query.get('mediaId');
     const [activeStep, setActiveStep] = useState(0);
-    const [fileUrl, setFileUrl] = useState(query.get('link'));
-    const [selectedFiles, setSelectedFiles] = useState([]);
+    const [fileUrl, setFileUrl] = useState(query.get('link') || '');
+    const [selectedFiles, setSelectedFiles] = useState([] as {path: string}[]);
     const [rawUpload, setRawUpload] = useState(true);
     const fileNameExtension = fileName && fileName.split('.').pop();
 
@@ -77,13 +77,9 @@ export const CreateNewRequest = () => {
         }
     }, [parentUrl]);
 
-    const handleFileSelection = (e) => {
-        setSelectedFiles(e);
-    };
-
     const steps = ['Enter the file URL (any types including zip)', 'Choose Files to Upload', 'Finish'];
 
-    function getStepContent(step) {
+    function getStepContent(step: number) {
         switch (step) {
             case 0:
                 return <div>
@@ -99,7 +95,7 @@ export const CreateNewRequest = () => {
                         disabled={fileNameExtension !== 'zip'} />} label="Raw Upload" />
                 </div>;
             case 1:
-                return <ChooseFilesToUpload defaultZipFileUrl={fileUrl} onSelectionChange={handleFileSelection} />;
+                return <ChooseFilesToUpload defaultZipFileUrl={fileUrl} onSelectionChange={setSelectedFiles} />;
             case 2:
                 return <FinalStep selectedFiles={selectedFiles} fileUrl={fileUrl} parentUrl={parentUrl}
                     mediaType={mediaType}

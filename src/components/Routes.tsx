@@ -1,5 +1,4 @@
 import Dashboard from './Dashboard/Dashboard';
-import Preferences from './Preferences/Preferences';
 import MediaDirectory from './MediaDirectory/MediaDirectory';
 import { RemoteUrlUploadRequestList } from './RemoteUrlUpload/RemoteUrlUpload';
 import { PlaylistPage } from './Playlist/playlistComponent';
@@ -21,13 +20,6 @@ export const AppRoutes = [
         sidebarName: 'Dashboard',
         component: Dashboard,
         icon: DashboardIcon
-    },
-    {
-        path: '/preferences',
-        sidebarName: 'Preferences',
-        component: Preferences,
-        icon: ShoppingCartIcon,
-        hide: true
     },
     {
         path: '/movies',
