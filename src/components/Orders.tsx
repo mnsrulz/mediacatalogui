@@ -9,7 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Title from './Title';
 
 // Generate Order Data
-function createData(id, date, name, shipTo, paymentMethod, amount) {
+function createData(id: number, date: string, name: string, shipTo: string, paymentMethod: string, amount: number) {
   return { id, date, name, shipTo, paymentMethod, amount };
 }
 
@@ -21,7 +21,7 @@ const rows = [
   createData(4, '15 Mar, 2019', 'Bruce Springsteen', 'Long Branch, NJ', 'VISA ⠀•••• 5919', 212.79),
 ];
 
-function preventDefault(event) {
+function preventDefault(event: { preventDefault: () => void; }) {
   event.preventDefault();
 }
 

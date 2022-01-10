@@ -40,7 +40,7 @@ export const Playlist = () => {
 
     useEffect(() => {
         (async () => {
-            const response = await apiClient.get('/playlists?includeSystemDefined=true');            
+            const response = await apiClient.get('/playlists?includeSystemDefined=true');
             setRows(response.data);
             setIsLoading(false);
         })();

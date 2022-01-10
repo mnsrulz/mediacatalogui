@@ -25,11 +25,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login({ setToken }) {
+export default function Login({ setToken }: LoginProps) {
   const classes = useStyles();
-  const responseGoogle = (res) => {    
-    setToken(res);
-  };
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -39,8 +36,8 @@ export default function Login({ setToken }) {
         </Avatar>
         <GoogleLogin
           clientId="345350504609-1moo0gfi27h0jj2qaim5ed1iohgprs99.apps.googleusercontent.com"
-          onSuccess={responseGoogle}
-          onFailure={responseGoogle}
+          onSuccess={setToken}
+          onFailure={setToken}
           cookiePolicy={'single_host_origin'}
           scope="profile email https://www.googleapis.com/auth/drive"
         />
@@ -53,6 +50,6 @@ export default function Login({ setToken }) {
   )
 }
 
-Login.propTypes = {
-  setToken: PropTypes.func.isRequired
+type LoginProps = {
+  setToken: (t:any)=>void
 }
