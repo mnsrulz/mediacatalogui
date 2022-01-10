@@ -39,8 +39,12 @@ export const MediaSourceListComponent = () => {
         setRows(updatedRows);
     };
 
+/*
+Change layout in mobile device.. for now setting min width to workout...
+*/
+
     const columns = [
-        { field: 'renderedTitle', headerName: 'Title', width: 340, sortable: false, flex: 1 },
+        { field: 'renderedTitle', headerName: 'Title', minWidth: 400, sortable: false, flex: 1 },
         {
             field: 'parserInfo', headerName: 'Parser Title', sortable: false, width: 280, renderCell: ({ value, row }) => {
                 return <MovieFetchComponent

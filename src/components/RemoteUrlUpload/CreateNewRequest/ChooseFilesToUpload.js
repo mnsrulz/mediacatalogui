@@ -8,8 +8,8 @@ export const ChooseFilesToUpload = ({ defaultZipFileUrl, onSelectionChange }) =>
     const [error, setError] = useState('');
 
     const columns = [
-        { field: 'path', headerName: 'Path', flex: 1 },
-        { field: 'uncompressedSize', headerName: 'Size', width: 120, valueFormatter: ({ value }) => prettyBytes(value) },
+        { field: 'path', headerName: 'Path', minWidth: 400, flex: 1 },
+        { field: 'uncompressedSize', headerName: 'Size', width: 100, valueFormatter: ({ value }) => prettyBytes(value) },
     ];
 
     useEffect(() => {
