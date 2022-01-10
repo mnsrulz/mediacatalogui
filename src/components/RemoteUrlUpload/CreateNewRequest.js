@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from "@material-ui/core/Button";
-import {ChooseFilesToUpload} from './CreateNewRequest/ChooseFilesToUpload';
+import { ChooseFilesToUpload } from './CreateNewRequest/ChooseFilesToUpload';
 import { FinalStep } from './CreateNewRequest/FinalStep';
 import { apiClient } from './../ApiClient/MediaCatalogNetlifyClient';
 import { TextField, Paper, Typography, Stepper, Step, StepLabel, StepContent, Checkbox, FormControlLabel } from '@material-ui/core';
@@ -15,6 +15,7 @@ function useQuery() {
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
+        padding: 0
     },
     button: {
         marginTop: theme.spacing(1),
@@ -24,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: theme.spacing(2),
     },
     resetContainer: {
-        padding: theme.spacing(3),
+        // padding: theme.spacing(3),
     },
 }));
 
@@ -68,8 +69,8 @@ export const CreateNewRequest = () => {
                     const { headers, title, link } = response.data[0];
                     setFileName(title);
                     setFileUrl(link);
-                    setFileHeaders(headers);                    
-                }else{
+                    setFileHeaders(headers);
+                } else {
                     alert('invalid response received!')
                 }
             })();
@@ -136,45 +137,43 @@ export const CreateNewRequest = () => {
 
     return (
         <div>
-            <div className={classes.root}>
-                <Stepper activeStep={activeStep} orientation="vertical">
-                    {steps.map((label, index) => (
-                        <Step key={label}>
-                            <StepLabel>{label}</StepLabel>
-                            <StepContent>
-                                <Typography>{getStepContent(index)}</Typography>
-                                <div className={classes.actionsContainer}>
-                                    <div>
-                                        <Button
-                                            disabled={activeStep === 0}
-                                            onClick={handleBack}
-                                            className={classes.button}
-                                        >
-                                            Back
-                                        </Button>
-                                        <Button
-                                            variant="contained"
-                                            color="primary"
-                                            onClick={handleNext}
-                                            className={classes.button}
-                                        >
-                                            {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                                        </Button>
-                                    </div>
+            <Stepper classes={{ root: classes.root }} activeStep={activeStep} orientation="vertical">
+                {steps.map((label, index) => (
+                    <Step key={label}>
+                        <StepLabel>{label}</StepLabel>
+                        <StepContent>
+                            <Typography>{getStepContent(index)}</Typography>
+                            <div className={classes.actionsContainer}>
+                                <div>
+                                    <Button
+                                        disabled={activeStep === 0}
+                                        onClick={handleBack}
+                                        className={classes.button}
+                                    >
+                                        Back
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={handleNext}
+                                        className={classes.button}
+                                    >
+                                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                                    </Button>
                                 </div>
-                            </StepContent>
-                        </Step>
-                    ))}
-                </Stepper>
-                {activeStep === steps.length && (
-                    <Paper square elevation={0} className={classes.resetContainer}>
-                        <Typography>All steps completed - you&apos;re finished</Typography>
-                        <Button onClick={handleReset} className={classes.button}>
-                            Reset
-                        </Button>
-                    </Paper>
-                )}
-            </div>
+                            </div>
+                        </StepContent>
+                    </Step>
+                ))}
+            </Stepper>
+            {activeStep === steps.length && (
+                <Paper square elevation={0} className={classes.resetContainer}>
+                    <Typography>All steps completed - you&apos;re finished</Typography>
+                    <Button onClick={handleReset} className={classes.button}>
+                        Reset
+                    </Button>
+                </Paper>
+            )}
         </div>
     );
 }

@@ -1,70 +1,48 @@
-import React, { useState } from 'react';
+import { DataGrid } from '@material-ui/data-grid';
+import React, { useState, useEffect } from 'react';
+import prettyBytes from 'pretty-bytes';
 
-export const ChooseFilesToUpload= ({defaultZipFileUrl, onSelectionChange})=> {
-    return <div>
-        hello
-    </div>
+export const ChooseFilesToUpload = ({ defaultZipFileUrl, onSelectionChange }) => {
+    const [isLoading, setIsLoading] = useState(true);
+    const [data, setData] = useState([]);
+    const [error, setError] = useState('');
+
+    const columns = [
+        { field: 'path', headerName: 'Path', flex: 1 },
+        { field: 'uncompressedSize', headerName: 'Size', width: 120, valueFormatter: ({ value }) => prettyBytes(value) },
+    ];
+
+    useEffect(() => {
+        (async () => {
+            const fetchUrl = `https://mediacatalogdirectorylisting.herokuapp.com/api/zip/listFiles?zipFileUrl=${encodeURIComponent(defaultZipFileUrl)}`;
+            const response = await fetch(fetchUrl);
+            try {
+                const responseAsJson = await response.json();
+                const mappedResult = responseAsJson.map(x => ({ ...x, id: x.path }));
+                setData(mappedResult);
+                setIsLoading(false);
+            } catch (error) {
+                setError(error.message);
+            }
+        })()
+    }, [defaultZipFileUrl])
+
+    if (error) {
+        return <div> Error: We have some errrors </div>;
+    } else {
+        return <DataGrid
+                autoHeight
+                rows={data}
+                columns={columns}
+                checkboxSelection
+                disableSelectionOnClick
+                onSelectionModelChange={(selectionModel) => {
+                    onSelectionChange(selectionModel.map(x => ({ path: x })));
+                }}
+                disableColumnMenu
+                disableColumnSelector
+                loading={isLoading}        
+            />
+        
+    }
 }
-//     constructor(props) {
-//         // debugger;
-//         super(props);
-//         this.state = {
-//             error: null,
-//             isLoaded: false,
-//             data: [],
-//             zipFileUrl: props.defaultZipFileUrl,
-//             onSelectionChange: props.onSelectionChange
-//         };
-
-//     }
-
-//     async componentDidMount() {
-//         const fetchUrl = `https://mediacatalogdirectorylisting.herokuapp.com/api/zip/listFiles?zipFileUrl=${encodeURIComponent(this.state.zipFileUrl)}`;
-//         const response = await fetch(fetchUrl);
-//         try {
-//             const responseAsJson = await response.json();
-//             this.setState({
-//                 isLoaded: true,
-//                 data: responseAsJson
-//             });
-//         } catch (error) {
-//             this.setState({
-//                 error: error
-//             });
-//         }
-
-//     }
-
-//     handleSelectionChange = (p, q, r, s) => {
-//         const selectedData = q.map(i => this.state.data[i.index]);
-//         this.state.onSelectionChange && this.state.onSelectionChange(selectedData);
-//     }
-
-//     render() {
-//         const columns = ["path", "uncompressedSize"];
-//         const options = {
-//             download: false,
-//             print: false,
-//             search: false,
-//             viewColumns: false,
-//             filter: false,
-//             pagination: false,
-//             onRowSelectionChange: this.handleSelectionChange
-//         };
-
-//         const { error, isLoaded, data } = this.state;
-
-//         if (error) {
-//             return <div>Error: We have some errrors</div>;
-//         } else if (!isLoaded) {
-//             return <div>Fetching files inside zip file...</div>;
-//         } else {
-//             return <MUIDataTable
-//                 title={"Upload Requests"}
-//                 data={data}
-//                 columns={columns}
-//                 options={options}
-//             />;
-//         }
-//     }
-// }
