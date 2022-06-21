@@ -1,7 +1,9 @@
-import React, { } from 'react';
+import React, { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, makeStyles, useMediaQuery } from '@material-ui/core';
 import { SourceExplorer } from './SourceExplorer';
 import { useTheme } from '@material-ui/core/styles';
+import { apiClient } from "../ApiClient/MediaCatalogNetlifyClient";
+
 const useStyles = makeStyles((theme) => ({
     dialogPaper: {
         minHeight: '80vh',
@@ -44,10 +46,20 @@ export const ViewExternalIdDialog = ({ open, mediaId, rootTitle, tmdbId, imdbId,
     const classes = useStyles();
     const theme = useTheme();
     const fullScreenDialog = useMediaQuery(theme.breakpoints.down('xs'));
-
-    const assignImdbId = () => {
-
+    const [imdbIdValue, setImdbIdValue] = useState('');
+    const handleImdbIdValueChange = (ev) => setImdbIdValue(ev.target.value);
+    const assignImdbId = async () => {
+        if (imdbIdValue) {
+            await apiClient.put(`items/${mediaId}/externalIds/${imdbIdValue}?type=imdb`);
+            onClose();
+        }else{
+            alert('please enter imdb id to save.')
+        }
     };
+
+    const imdbOpener = imdbId ? <span>
+        Imdb: {imdbId}
+    </span> : <span>Imdb: <input onChange={handleImdbIdValueChange} /></span>;
 
     if (open) {
         return (<Dialog
@@ -58,14 +70,14 @@ export const ViewExternalIdDialog = ({ open, mediaId, rootTitle, tmdbId, imdbId,
             classes={{ paper: !fullScreenDialog && classes.dialogPaper }}
             aria-labelledby="responsive-dialog-title">
             <DialogTitle>{rootTitle} : External Sources</DialogTitle>
-            <DialogContent dividers classes={{ root: classes.dialogContent }}>
-                
+            <DialogContent dividers>
                 Tmdb: {tmdbId}
-                    <br/>
-                Imdb: {imdbId}
+                <br />
+                {imdbOpener}
             </DialogContent>
             <DialogActions>
                 <Button color="primary" onClick={onClose}>Cancel</Button>
+                <Button color="primary" onClick={assignImdbId}>Save ImdbId</Button>
             </DialogActions>
         </Dialog>
         );
