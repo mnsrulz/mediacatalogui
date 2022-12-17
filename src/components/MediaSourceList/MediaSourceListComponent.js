@@ -5,7 +5,7 @@ import { MenuItem } from '@material-ui/core';
 import SourceType from "./SourceTypeComponent";
 import { MovieFetchComponent } from "./MovieFetchComponent";
 import { InputWithDropdownComponent } from './InputWithDropdownComponent';
-import axios from 'axios';
+import SourceDeleteComponent from './SourceDeleteComponent';
 
 const dayjs = require('dayjs');
 var relativeTime = require('dayjs/plugin/relativeTime')
@@ -62,7 +62,12 @@ Change layout in mobile device.. for now setting min width to workout...
             }
         },
         { field: 'created', headerName: 'Created', sortable: false, width: 120, valueFormatter: ({ value }) => dayjs(value).fromNow() },
-        { field: 'modified', headerName: 'Last Modified', sortable: false, width: 120, valueFormatter: ({ value }) => dayjs(value).fromNow() }
+        { field: 'modified', headerName: 'Last Modified', sortable: false, width: 120, valueFormatter: ({ value }) => dayjs(value).fromNow() },
+        {
+            field: 'id', headerName: ' ', sortable: false, width: 60, renderCell: ({ value }) => {
+                return <SourceDeleteComponent mediaSourceId = {value}/>
+            }
+        },
     ];
 
 
