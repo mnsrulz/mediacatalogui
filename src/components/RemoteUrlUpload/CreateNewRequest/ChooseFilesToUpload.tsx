@@ -15,7 +15,7 @@ export const ChooseFilesToUpload = ({ defaultZipFileUrl, onSelectionChange }: Ch
 
     useEffect(() => {
         (async () => {
-            const fetchUrl = `https://mediacatalogdirectorylisting.herokuapp.com/api/zip/listFiles?zipFileUrl=${encodeURIComponent(defaultZipFileUrl)}`;
+            const fetchUrl = `https://zipservice.netlify.app/.netlify/functions/server/list?q=${encodeURIComponent(defaultZipFileUrl)}`;
             
             try {
                 const response = await axios.get<{path:string}[]>(fetchUrl);

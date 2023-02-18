@@ -6,7 +6,6 @@ import SourceType from "./SourceTypeComponent";
 import { MovieFetchComponent } from "./MovieFetchComponent";
 import { InputWithDropdownComponent } from './InputWithDropdownComponent';
 import SourceDeleteComponent from './SourceDeleteComponent';
-import axios from 'axios';
 
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
@@ -67,8 +66,13 @@ export const MediaSourceListComponent = () => {
                 return <SourceType value={`${value}`}></SourceType>
             }
         },
-        { field: 'created', headerName: 'Created', sortable: false, width: 120, valueFormatter: ({ value }) => dayjs(value).fromNow() },
-        { field: 'modified', headerName: 'Last Modified', sortable: false, width: 120, valueFormatter: ({ value }) => dayjs(value).fromNow() }
+        { field: 'created', headerName: 'Created', sortable: false, width: 120, valueFormatter: ({ value }) => dayjs(value?.toString()).fromNow() },
+        { field: 'modified', headerName: 'Last Modified', sortable: false, width: 120, valueFormatter: ({ value }) => dayjs(value?.toString()).fromNow() },
+        {
+            field: 'id', headerName: ' ', sortable: false, width: 60, renderCell: ({ value }) => {
+                return <SourceDeleteComponent mediaSourceId = {value}/>
+            }
+        }
     ];
 
 
