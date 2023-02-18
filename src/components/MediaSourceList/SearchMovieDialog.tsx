@@ -4,7 +4,7 @@ import Dialog from '@material-ui/core/Dialog';
 import { DialogActions, debounce, Tabs, Tab, MenuItem } from '@material-ui/core';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { tmdbClient } from '../ApiClient/TmdbClient'
+import { tmdbClient, tmdbresult } from '../ApiClient/TmdbClient'
 import { Avatar, List, ListItem, ListItemAvatar, ListItemText } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -23,12 +23,18 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+type SearchMovieDialogProps = {
+    handleSelect: any,
+    show: boolean,
+    query: string,
+    isTv: boolean
+}
 
-export const SearchMovieDialog = ({ handleSelect, show, query, isTv }) => {
+export const SearchMovieDialog = ({ handleSelect, show, query, isTv }: SearchMovieDialogProps) => {
     // const [open, setOpen] = useState(show);
     const [searchQuery, setSearchQuery] = useState(query);
     const [searchTv, setSearchTv] = useState(isTv);
-    const [results, setResults] = useState([]);
+    const [results, setResults] = useState<tmdbresult[]>([]);
     const [selectedId, setSelectedId] = useState(0);
     const [yearSelection, setyearSelection] = useState('All');
 
@@ -46,10 +52,6 @@ export const SearchMovieDialog = ({ handleSelect, show, query, isTv }) => {
         });
     };
 
-    const handleOnChange = (value) => {
-        setSearchQuery(value);
-    };
-
     useEffect(() => {
         if (!searchQuery || !show) return;
         (async () => {
@@ -60,7 +62,7 @@ export const SearchMovieDialog = ({ handleSelect, show, query, isTv }) => {
 
     const [value, setValue] = useState(isTv ? 1 : 0);
 
-    const handleChange = (event, newValue) => {
+    const handleChange = (event: any, newValue: number) => {
         setValue(newValue);
         setSearchTv(newValue === 1);
         setSelectedId(0);
@@ -89,10 +91,10 @@ export const SearchMovieDialog = ({ handleSelect, show, query, isTv }) => {
             <DialogContent dividers>
                 <InputWithDropdownComponent
                     pendingSelection={yearSelection}
-                    handlePendingSelectionChange={v => setyearSelection(v)}
+                    handlePendingSelectionChange={setyearSelection}
                     defaultValue={searchQuery}
                     showSearchIcon={false}
-                    onInputChange={handleOnChange} >
+                    onInputChange={setSearchQuery} >
                     <MenuItem value={'All'}>Year</MenuItem>
                     {
                         years.map(m => <MenuItem key={m} value={m}>{m}</MenuItem>)

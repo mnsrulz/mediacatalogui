@@ -6,19 +6,31 @@ function AuthenticatedClient() {
     });
 
     return {
-        findMovie: (movieId) => {
+        findMovie: (movieId: string) => {
 
         },
-        findImdbId: async (tmdbId, isTv) => {
+        findImdbId: async (tmdbId: string, isTv: boolean) => {
             let apiUrl = `${isTv ? 'tv' : 'movie'}/${tmdbId}?api_key=${apiKey}&language=en-US&append_to_response=external_ids`;
             const resposne = await _instance.get(apiUrl);
             return resposne.data.external_ids.imdb_id;
         },
-        search: async (q, isTv, year) => {
+        search: async (q: string | number | boolean, isTv: boolean, year?: string) => {
             let apiUrl = `search/${isTv ? 'tv' : 'movie'}?api_key=${apiKey}&language=en-US&query=${encodeURIComponent(q)}&year=${year}`;
             const resposne = await _instance.get(apiUrl);
-            return resposne.data;
+            return resposne.data as tmdbresposetype;
         }
     }
 }
 export const tmdbClient = AuthenticatedClient();
+
+export type tmdbresult = {
+    id: number,
+    title: string;
+    name: string;
+    poster_path: string;
+    backdrop_path: string;
+    release_date: string;
+    first_air_date: string;
+    overview: string;
+}
+export type tmdbresposetype = { results: tmdbresult[] };

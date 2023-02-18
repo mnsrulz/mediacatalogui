@@ -6,30 +6,34 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 
-export const ResponsiveDialog = ({ confirmText, okButtonText, cancelButtonText, clickHandler, open }) => {
+export const ResponsiveDialog = ({ confirmText, okButtonText, cancelButtonText, clickHandler, open }:ResponseDialogProps) => {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
-
-    const handleClose = (result) => {
-        clickHandler(result);
-    };
 
     return (
         <div>
             <Dialog fullScreen={fullScreen}
                 open={open}
-                onClose={() => handleClose('Cancel')}
+                onClose={() => clickHandler('Cancel')}
                 aria-labelledby="responsive-dialog-title">
                 <DialogTitle id="responsive-dialog-title">{confirmText}</DialogTitle>
                 <DialogActions>
-                    <Button autoFocus onClick={() => handleClose('Cancel')} color="primary">
+                    <Button autoFocus onClick={() => clickHandler('Cancel')} color="primary">
                         {cancelButtonText}
                     </Button>
-                    <Button onClick={() => handleClose('Ok')} color="primary" autoFocus>
+                    <Button onClick={() => clickHandler('Ok')} color="primary" autoFocus>
                         {okButtonText}
                     </Button>
                 </DialogActions>
             </Dialog>
         </div>
     );
+}
+
+type ResponseDialogProps = {
+    confirmText: string, 
+    okButtonText: string, 
+    cancelButtonText: string, 
+    clickHandler: (t: string) => void, 
+    open: boolean
 }

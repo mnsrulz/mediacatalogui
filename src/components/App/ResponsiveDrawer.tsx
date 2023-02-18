@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-export const ResponsiveDrawer = ({ open, handleDrawerClose, hiddenDrawerVariant }) => {
+export const ResponsiveDrawer = ({ open, handleDrawerClose, hiddenDrawerVariant }: ResponsiveDrawerProp) => {
     const classes = useStyles();
     const handleClick = () => {
 
@@ -60,4 +60,10 @@ export const ResponsiveDrawer = ({ open, handleDrawerClose, hiddenDrawerVariant 
         </Drawer>
     )
 
+}
+
+type ResponsiveDrawerProp = {
+    open: boolean,
+    handleDrawerClose: () => void,
+    hiddenDrawerVariant: boolean
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid, GridColumns } from '@material-ui/data-grid';
 import { apiClient } from '../ApiClient/MediaCatalogNetlifyClient'
 import { MenuItem } from '@material-ui/core';
 import SourceType from "./SourceTypeComponent";
@@ -7,20 +7,24 @@ import { MovieFetchComponent } from "./MovieFetchComponent";
 import { InputWithDropdownComponent } from './InputWithDropdownComponent';
 import SourceDeleteComponent from './SourceDeleteComponent';
 
-const dayjs = require('dayjs');
-var relativeTime = require('dayjs/plugin/relativeTime')
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
 dayjs.extend(relativeTime);
 
 export const MediaSourceListComponent = () => {
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(25);
-    const [rows, setRows] = useState([]);
+    const [rows, setRows] = useState<{
+        mediaItemId: string | null; id: string
+    }[]>([]);
     const [rowCount, setRowCount] = useState(0);
     const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState('');
     const [pendingSelection, setPendingSelection] = useState('Pending');
 
-    const fxhandleMediaAssignment = async (result) => {
+    const fxhandleMediaAssignment = async (result: {
+        mediaItemId: string; mediaSourceId: string
+    }[]) => {
         const updatedRows = rows.map(x => {
             const matchingResult = result.find(y => y.mediaSourceId === x.id);
             if (matchingResult) {
@@ -31,7 +35,7 @@ export const MediaSourceListComponent = () => {
         setRows(updatedRows);
     };
 
-    const fxhandleMediaSourceWithdrawl = (mediaSourceId) => {
+    const fxhandleMediaSourceWithdrawl = (mediaSourceId: string) => {
         const updatedRows = rows.map(x => {
             x.id === mediaSourceId && (x.mediaItemId = null);
             return x;
@@ -39,16 +43,17 @@ export const MediaSourceListComponent = () => {
         setRows(updatedRows);
     };
 
-/*
-Change layout in mobile device.. for now setting min width to workout...
-*/
+    /*
+    Change layout in mobile device.. for now setting min width to workout...
+    */
 
-    const columns = [
+    const columns: GridColumns = [
         { field: 'renderedTitle', headerName: 'Title', minWidth: 400, sortable: false, flex: 1 },
         {
             field: 'parserInfo', headerName: 'Parser Title', sortable: false, width: 280, renderCell: ({ value, row }) => {
                 return <MovieFetchComponent
-                    value={value?.title || row.renderedTitle} isTv={value?.isTv}
+                    value={((value as { title: string }).title) || row.renderedTitle}
+                    isTv={(value as { isTv: boolean }).isTv}
                     mediaSourceId={row.id}
                     mediaItemId={row.mediaItemId}
                     handleMediaAssignment={fxhandleMediaAssignment}
@@ -58,20 +63,20 @@ Change layout in mobile device.. for now setting min width to workout...
         },
         {
             field: 'crawlerType', headerName: 'Source', sortable: false, width: 80, renderCell: ({ value }) => {
-                return <SourceType value={value}></SourceType>
+                return <SourceType value={`${value}`}></SourceType>
             }
         },
-        { field: 'created', headerName: 'Created', sortable: false, width: 120, valueFormatter: ({ value }) => dayjs(value).fromNow() },
-        { field: 'modified', headerName: 'Last Modified', sortable: false, width: 120, valueFormatter: ({ value }) => dayjs(value).fromNow() },
+        { field: 'created', headerName: 'Created', sortable: false, width: 120, valueFormatter: ({ value }) => dayjs(value?.toString()).fromNow() },
+        { field: 'modified', headerName: 'Last Modified', sortable: false, width: 120, valueFormatter: ({ value }) => dayjs(value?.toString()).fromNow() },
         {
             field: 'id', headerName: ' ', sortable: false, width: 60, renderCell: ({ value }) => {
                 return <SourceDeleteComponent mediaSourceId = {value}/>
             }
-        },
+        }
     ];
 
 
-    const handleOnChange = (value) => {
+    const handleOnChange = (value: string) => {
         setPage(0);
         setSearch(value);
     };
@@ -95,7 +100,7 @@ Change layout in mobile device.. for now setting min width to workout...
         return () => abortController.abort();
     }, [page, search, pendingSelection, pageSize]);
 
-    const handlePendingSelectionChange = (value) => {
+    const handlePendingSelectionChange = (value: string) => {
         setPendingSelection(value);
     };
 
@@ -104,7 +109,8 @@ Change layout in mobile device.. for now setting min width to workout...
             pendingSelection={pendingSelection}
             handlePendingSelectionChange={handlePendingSelectionChange}
             defaultValue={search}
-            onInputChange={handleOnChange} >
+            onInputChange={handleOnChange}
+            showSearchIcon={false} >
             <MenuItem value={'All'}>All</MenuItem>
             <MenuItem value={'Pending'}>Pending</MenuItem>
         </InputWithDropdownComponent>

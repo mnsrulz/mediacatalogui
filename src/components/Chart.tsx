@@ -4,7 +4,7 @@ import { useTheme } from '@material-ui/core/styles';
 import Title from './Title';
 
 // Generate Sales Data
-function createData(time, amount) {
+function createData(time: string, amount: number | undefined) {
   return { time, amount };
 }
 

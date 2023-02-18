@@ -4,7 +4,6 @@ import { apiClient } from "../ApiClient/MediaCatalogNetlifyClient";
 import { Breadcrumbs, Typography, makeStyles, Button } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 
-
 const useStyles = makeStyles((theme) => ({
     breadcrumb: {
         marginBottom: theme.spacing(3),
@@ -12,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export const PlaylistDetails = ({ playlistId }) => {
+export const PlaylistDetails = ({ playlistId }:PlaylistDetailsProps) => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const classes = useStyles();
@@ -44,3 +43,7 @@ export const PlaylistDetails = ({ playlistId }) => {
         </div>
     );
 };
+
+type PlaylistDetailsProps = {
+    playlistId:string
+}

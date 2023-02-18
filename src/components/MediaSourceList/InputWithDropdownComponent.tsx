@@ -2,6 +2,7 @@ import React from 'react';
 import { Divider, IconButton, InputBase, Paper, Select } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
+import { ReactNodeLike } from 'prop-types';
 
 const useStyles = makeStyles((theme) => ({
     searchbar: {
@@ -33,11 +34,12 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-export const InputWithDropdownComponent = ({ children, pendingSelection,
+export const InputWithDropdownComponent = ({ children,
+    pendingSelection,
     handlePendingSelectionChange,
     onInputChange,
     defaultValue,
-    showSearchIcon = true }) => {
+    showSearchIcon = true }: InputDropdownProps) => {
     const classes = useStyles();
     return <Paper component="form" className={classes.root} >
         <Select
@@ -46,7 +48,7 @@ export const InputWithDropdownComponent = ({ children, pendingSelection,
                 select: classes.searchDropdownSelect
             }}
             value={pendingSelection}
-            onChange={ev => handlePendingSelectionChange(ev.target.value)}>
+            onChange={ev => handlePendingSelectionChange(`${ev.target.value}`)}>
             {children}
         </Select>
         <Divider className={classes.divider} orientation="vertical" />
@@ -61,4 +63,13 @@ export const InputWithDropdownComponent = ({ children, pendingSelection,
         }
     </Paper>
 
+}
+
+type InputDropdownProps = {
+    children: ReactNodeLike,
+    pendingSelection: string,
+    handlePendingSelectionChange: (v: string) => void,
+    onInputChange: (v: string) => void,
+    defaultValue: string,
+    showSearchIcon: boolean
 }

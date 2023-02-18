@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { apiClient } from '../ApiClient/MediaCatalogNetlifyClient';
-import { DataGrid } from '@material-ui/data-grid';
 import { Link } from 'react-router-dom';
 
 import { makeStyles } from "@material-ui/core/styles";
-import { Breadcrumbs, List, ListItem, ListItemText, ListSubheader, Paper, Typography } from '@material-ui/core';
+import { Breadcrumbs, List, ListItem, ListItemText, Paper, Typography } from '@material-ui/core';
 
 const dayjs = require('dayjs');
 var relativeTime = require('dayjs/plugin/relativeTime')
@@ -40,7 +39,7 @@ export const Playlist = () => {
 
     useEffect(() => {
         (async () => {
-            const response = await apiClient.get('/playlists?includeSystemDefined=true');            
+            const response = await apiClient.get('/playlists?includeSystemDefined=true');
             setRows(response.data);
             setIsLoading(false);
         })();
