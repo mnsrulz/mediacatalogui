@@ -70,7 +70,7 @@ export const MediaSourceListComponent = () => {
         { field: 'modified', headerName: 'Last Modified', sortable: false, width: 120, valueFormatter: ({ value }) => dayjs(value?.toString()).fromNow() },
         {
             field: 'id', headerName: ' ', sortable: false, width: 60, renderCell: ({ value }) => {
-                return <SourceDeleteComponent mediaSourceId = {value}/>
+                return <SourceDeleteComponent mediaSourceId = {`${value}`}/>
             }
         }
     ];
