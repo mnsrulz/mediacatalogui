@@ -3,7 +3,7 @@ import DoneIcon from '@material-ui/icons/Done';
 import { useEffect, useState } from 'react'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import { apiClient } from '../ApiClient/MediaCatalogNetlifyClient';
-import { tmdbClient } from '../ApiClient/TmdbClient'
+import { tmdbClient, tmdbresult } from '../ApiClient/TmdbClient'
 import { SearchMovieDialog } from './SearchMovieDialog'
 import { MiniPoster } from './MiniPoster';
 import { SimilarMovieAssign } from './SimilarMovieAssign';
@@ -57,7 +57,11 @@ const LightTooltip = withStyles((theme) => ({
     },
 }))(Tooltip);
 
-export const MovieFetchComponent = ({ value, isTv, mediaSourceId, mediaItemId, handleMediaAssignment, handleMediaSourceWithdrawl
+type FCProps = {
+    value: string, isTv: boolean, mediaSourceId: string, mediaItemId: string, handleMediaAssignment: any, handleMediaSourceWithdrawl: any
+};
+
+export const MovieFetchComponent: React.FC<FCProps> = ({ value, isTv, mediaSourceId, mediaItemId, handleMediaAssignment, handleMediaSourceWithdrawl
 }) => {
     //const posterSize = 'w185';  //w92
     const avatarSize = 'w92';  //w92
@@ -71,12 +75,15 @@ export const MovieFetchComponent = ({ value, isTv, mediaSourceId, mediaItemId, h
     const [year, setYear] = useState('');
     const [overview, setOverview] = useState('');
     const [hasResult, setHasResult] = useState(false);
-    const [result, setResult] = useState();
+    const [result, setResult] = useState<tmdbresult>();
     const classes = useStyles();
     const [loading, setLoading] = useState(true);
     const [showDialog, setShowDialog] = useState(false);
 
-    const [similarMediaResults, setSimilarMediaResults] = useState([]);
+    const [similarMediaResults, setSimilarMediaResults] = useState<{
+        renderedTitle: string,
+        id: number
+    }[]>([]);
 
 
     const [similarMediaItemShowDialog, setSimilarMediaItemShowDialog] = useState(false);
@@ -106,13 +113,13 @@ export const MovieFetchComponent = ({ value, isTv, mediaSourceId, mediaItemId, h
         })();
     }, [value]);
 
-    const deleteIcon = hasResult ? <DoneIcon /> : null
+    const deleteIcon = hasResult ? <DoneIcon /> : undefined
     const innerDeleteHandler = async () => {
-        const { id } = result;
-        await assigncurrentmedia(id, isTv);
+        if (result?.id)
+            await assigncurrentmedia(result.id, isTv);
     }
 
-    const assigncurrentmedia = async (id, isthisitemtv) => {
+    const assigncurrentmedia = async (id: number, isthisitemtv: boolean) => {
         let mediaItemId;
         try {
             const response = await apiClient.get(`/items/byExternalId/${id}?type=tmdb`);
@@ -135,14 +142,14 @@ export const MovieFetchComponent = ({ value, isTv, mediaSourceId, mediaItemId, h
         setShowDialog(true);
     }
 
-    const handleSelectSearchDialog = async (outputofdialog) => {
+    const handleSelectSearchDialog = async (outputofdialog: { id: number; isTv: boolean; }) => {
         setShowDialog(false);
         if (outputofdialog) {
             await assigncurrentmedia(outputofdialog.id, outputofdialog.isTv);
         }
     }
 
-    const handleSelectAssignMovieDialog = (assignedItems) => {
+    const handleSelectAssignMovieDialog = (assignedItems: any[]) => {
         setSimilarMediaItemShowDialog(false);
         if (assignedItems) {
             const payloadToSend = assignedItems.map(mediaSourceId => { return { mediaItemId, mediaSourceId } });
@@ -155,14 +162,19 @@ export const MovieFetchComponent = ({ value, isTv, mediaSourceId, mediaItemId, h
         handleMediaSourceWithdrawl(mediaSourceId);
     }
 
-    const miniPoster = <MiniPoster title={title} backpath={backdropPath} isTv={isTv} year={year} posterPath={posterPath} />
+    const miniPoster = <MiniPoster title={title}
+        backpath={backdropPath}
+        isTv={isTv}
+        year={year}
+        posterPath={posterPath} />
+
     const chip = <Chip
         size='medium'
         avatar={<Avatar src={avatarUrl} />}
         color="primary" label={title || value}
         variant="outlined"
         onClick={showDialogHandler}
-        onDelete={hasResult ? innerDeleteHandler : null}
+        onDelete={hasResult ? innerDeleteHandler : undefined}
         deleteIcon={deleteIcon}
         style={{ maxWidth: 240 }}
         clickable></Chip>

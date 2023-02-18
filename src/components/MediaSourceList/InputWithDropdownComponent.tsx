@@ -48,7 +48,7 @@ export const InputWithDropdownComponent = ({ children,
                 select: classes.searchDropdownSelect
             }}
             value={pendingSelection}
-            onChange={ev => handlePendingSelectionChange(ev.target.value)}>
+            onChange={ev => handlePendingSelectionChange(`${ev.target.value}`)}>
             {children}
         </Select>
         <Divider className={classes.divider} orientation="vertical" />
@@ -68,7 +68,7 @@ export const InputWithDropdownComponent = ({ children,
 type InputDropdownProps = {
     children: ReactNodeLike,
     pendingSelection: string,
-    handlePendingSelectionChange: (v: unknown) => void,
+    handlePendingSelectionChange: (v: string) => void,
     onInputChange: (v: string) => void,
     defaultValue: string,
     showSearchIcon: boolean

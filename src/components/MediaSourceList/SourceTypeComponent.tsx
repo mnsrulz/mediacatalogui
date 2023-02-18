@@ -1,6 +1,9 @@
 import { Typography } from '@material-ui/core';
 import React from 'react';
-export default function SourceTypeComponent({ value }) {
+type SourceTypeProps = {
+    value: string
+}
+export default function SourceTypeComponent({ value }:SourceTypeProps) {
     const getRenderValue = () => {
         switch (value) {
             case 'hdhub':

@@ -13,21 +13,32 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export const SimilarMovieAssign = ({ show, mediaItemId, query, handleSelect, items }) => {
+type smProps = {
+    show: boolean,
+    mediaItemId: string,
+    query: string,
+    handleSelect: any,
+    items: {
+        renderedTitle: string,
+        id: number
+    }[]
+}
+
+export const SimilarMovieAssign = ({ show, mediaItemId, query, handleSelect, items }: smProps) => {
     const classes = useStyles();
-    
-    
-    const [checked, setChecked] = useState([]);
+
+
+    const [checked, setChecked] = useState<number[]>([]);
     const handleClose = () => {
         handleSelect();
     };
 
-    useEffect(()=>{
+    useEffect(() => {
         const checkedItems = items?.map(x => x.id) || [];
         setChecked(checkedItems)
     }, [items]);
 
-    const handleToggle = (value) => () => {
+    const handleToggle = (value:number) => () => {
         const currentIndex = checked.indexOf(value);
         const newChecked = [...checked];
 
@@ -60,7 +71,10 @@ export const SimilarMovieAssign = ({ show, mediaItemId, query, handleSelect, ite
                         items && (<List>
                             {items.map((value) => {
                                 const labelId = `checkbox-list-label-${value.id}`;
-                                return (<ListItem key={value.id} button onClick={handleToggle(value.id)}>
+                                return (<ListItem
+                                    key={value.id}
+                                    button
+                                    onClick={handleToggle(value.id)}>
                                     <ListItemIcon>
                                         <Checkbox
                                             edge="start"

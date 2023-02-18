@@ -86,7 +86,21 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: 500
     }
 }));
-export const MiniPoster = ({ posterPath, backpath, title, year, isTv, tagline, mode, mediaItemId, playlistIds, action }) => {
+
+type tsss = {
+    action?: any,
+    mode?: 'portrait',
+    backpath: string,
+    posterPath: string,
+    isTv: boolean,
+    title: string,
+    year: string,
+    // tagline: string,
+    // mediaItemId: string,
+    // playlistIds: string,
+}
+export const MiniPoster = (props: tsss) => {
+    const { action, mode, backpath, posterPath, isTv, title, year } = props;
     const classes = useStyles();
     const calculatedBackdrop = () => {
         if (mode === 'portrait') {
@@ -112,7 +126,7 @@ export const MiniPoster = ({ posterPath, backpath, title, year, isTv, tagline, m
                         <div className={classes.tag}>{isTv ? 'TV' : 'Movie'}</div>
                         <Typography variant={'h2'} className={classes.title}>
                             {title} ({year})
-                    </Typography>
+                        </Typography>
                     </div>
                 </Box>
                 <CardHeader className={classes.author} classes={{
@@ -124,7 +138,7 @@ export const MiniPoster = ({ posterPath, backpath, title, year, isTv, tagline, m
                     subheaderTypographyProps={{ noWrap: true }}
                     action={action}
                 />
-            </Card>            
+            </Card>
         </div>
     )
 }
