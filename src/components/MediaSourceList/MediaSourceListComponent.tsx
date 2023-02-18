@@ -48,7 +48,7 @@ export const MediaSourceListComponent = () => {
     */
 
     const columns: GridColumns = [
-        { field: 'renderedTitle', headerName: 'Title', minWidth: 400, sortable: false, flex: 1 },
+        { field: 'renderedTitle', headerName: 'Title', minWidth: 340, sortable: false, flex: 1 },
         {
             field: 'parserInfo', headerName: 'Parser Title', sortable: false, width: 280, renderCell: ({ value, row }) => {
                 return <MovieFetchComponent
