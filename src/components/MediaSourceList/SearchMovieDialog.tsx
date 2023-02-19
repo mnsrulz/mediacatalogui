@@ -37,6 +37,10 @@ export const SearchMovieDialog = ({ handleSelect, show, query, isTv }: SearchMov
     const [results, setResults] = useState<tmdbresult[]>([]);
     const [selectedId, setSelectedId] = useState(0);
     const [yearSelection, setyearSelection] = useState('All');
+    const [isLoading, setIsLoading] = useState(false);
+
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
 
     const classes = useStyles();
     //const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -52,13 +56,24 @@ export const SearchMovieDialog = ({ handleSelect, show, query, isTv }: SearchMov
         });
     };
 
+    const handleLoadMoreClick = () => {
+        setPage(page + 1);
+        loadItems();
+    }
+
+    const loadItems = async () => {
+        setIsLoading(true);
+        const searchResult = await tmdbClient.search(searchQuery, searchTv, yearSelection == 'All' ? '' : yearSelection, page);
+        setResults(searchResult.results);
+        //setResults([...results, ...searchResult.results]);    //some problems with this
+        setTotalPages(searchResult.total_pages);
+        setIsLoading(false);
+    }
+
     useEffect(() => {
         if (!searchQuery || !show) return;
-        (async () => {
-            const { results } = await tmdbClient.search(searchQuery, searchTv, yearSelection == 'All' ? '' : yearSelection);
-            setResults(results);
-        })();
-    }, [searchQuery, show, searchTv, yearSelection]);
+        loadItems();
+    }, [searchQuery, show, searchTv, yearSelection, page]);
 
     const [value, setValue] = useState(isTv ? 1 : 0);
 
@@ -66,12 +81,21 @@ export const SearchMovieDialog = ({ handleSelect, show, query, isTv }: SearchMov
         setValue(newValue);
         setSearchTv(newValue === 1);
         setSelectedId(0);
+        setPage(1);
     };
+
+    const handleSearchChange = (v: string) => {
+        setResults([]);
+        setPage(1);
+        setTotalPages(0);
+        setSearchQuery(v);
+    }
 
     const now = new Date().getUTCFullYear();
     const years = Array(now - (now - 100)).fill('').map((v, idx) => now - idx);
 
     return (<div>
+
         <Dialog open={show}
             fullWidth={true}
             classes={{ paper: classes.dialogPaper }}
@@ -94,7 +118,7 @@ export const SearchMovieDialog = ({ handleSelect, show, query, isTv }: SearchMov
                     handlePendingSelectionChange={setyearSelection}
                     defaultValue={searchQuery}
                     showSearchIcon={false}
-                    onInputChange={setSearchQuery} >
+                    onInputChange={handleSearchChange} >
                     <MenuItem value={'All'}>Year</MenuItem>
                     {
                         years.map(m => <MenuItem key={m} value={m}>{m}</MenuItem>)
@@ -114,9 +138,19 @@ export const SearchMovieDialog = ({ handleSelect, show, query, isTv }: SearchMov
                                     <Avatar src={value.poster_path && `https://image.tmdb.org/t/p/w92${value.poster_path}`}></Avatar>
                                 </ListItemAvatar>
                                 <ListItemText primary={`${value.title || value.name}`}
-                                    secondary={(value.release_date || value.first_air_date)?.substr(0, 4)} />
+                                    secondary={(value.release_date || value.first_air_date)?.substring(0, 4)} />
                             </ListItem>)
                         })}
+                        {
+                            isLoading && (<ListItem><ListItemText primary='Loading...' /></ListItem>)
+                        }
+                        {
+                            !isLoading && totalPages > page && (
+                                <ListItem button key={`load-more-${page}`} onClick={handleLoadMoreClick}>
+                                    <ListItemText primary='Load More...' />
+                                </ListItem>
+                            )
+                        }
                     </List>)
                 }
             </DialogContent>

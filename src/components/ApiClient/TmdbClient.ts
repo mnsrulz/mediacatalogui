@@ -14,8 +14,8 @@ function AuthenticatedClient() {
             const resposne = await _instance.get(apiUrl);
             return resposne.data.external_ids.imdb_id;
         },
-        search: async (q: string | number | boolean, isTv: boolean, year?: string) => {
-            let apiUrl = `search/${isTv ? 'tv' : 'movie'}?api_key=${apiKey}&language=en-US&query=${encodeURIComponent(q)}&year=${year}`;
+        search: async (q: string | number | boolean, isTv: boolean, year?: string, page: number = 1) => {
+            let apiUrl = `search/${isTv ? 'tv' : 'movie'}?api_key=${apiKey}&language=en-US&query=${encodeURIComponent(q)}&year=${year}&page=${page}`;
             const resposne = await _instance.get(apiUrl);
             return resposne.data as tmdbresposetype;
         }
@@ -33,4 +33,9 @@ export type tmdbresult = {
     first_air_date: string;
     overview: string;
 }
-export type tmdbresposetype = { results: tmdbresult[] };
+export type tmdbresposetype = {
+    page: number,
+    results: tmdbresult[],
+    total_results: number,
+    total_pages: number
+};
