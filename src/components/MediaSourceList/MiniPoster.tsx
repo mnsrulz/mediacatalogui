@@ -1,6 +1,11 @@
-import { Avatar, Box, Card, CardHeader, CardMedia, Typography } from '@material-ui/core';
+import { Avatar, Box, Card, CardHeader, CardMedia, Typography, Checkbox } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles'
-import React from 'react';
+import React, { useState } from 'react';
+
+import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
+import BookmarkIcon from '@material-ui/icons/Bookmark';
+import { apiClient } from '../ApiClient/MediaCatalogNetlifyClient';
+
 
 const useStyles = makeStyles((theme) => ({
     card: {
@@ -95,12 +100,12 @@ type tsss = {
     isTv: boolean,
     title: string,
     year: string,
-    // tagline: string,
-    // mediaItemId: string,
-    // playlistIds: string,
+    currentPlaylistId?: string,
+    mediaId?: string
 }
 export const MiniPoster = (props: tsss) => {
-    const { action, mode, backpath, posterPath, isTv, title, year } = props;
+    const { mediaId, action, mode, backpath, posterPath, isTv, title, year, currentPlaylistId } = props;
+    const [isChecked, setIsChecked] = useState(true);
     const classes = useStyles();
     const calculatedBackdrop = () => {
         if (mode === 'portrait') {
@@ -116,6 +121,23 @@ export const MiniPoster = (props: tsss) => {
         return `https://image.tmdb.org/t/p/w92${posterPath}`
     }
 
+    const togglePlaylist = async () => {
+        const resource = `items/${mediaId}/playlists/${currentPlaylistId}`;
+        if (isChecked) {
+            setIsChecked(false);
+            await apiClient.delete(resource);
+        } else {
+            setIsChecked(true);
+            await apiClient.put(resource);
+        }
+    }
+
+    const playListToggleElement = currentPlaylistId ? <Checkbox checked={isChecked}
+        onClick={togglePlaylist}
+        title={isChecked ? 'Remove from playlist' : 'Add to the playlist'}
+        icon={<BookmarkBorderIcon />}
+        checkedIcon={<BookmarkIcon />} />
+        : <span />;
 
     return (
         <div>
@@ -124,6 +146,7 @@ export const MiniPoster = (props: tsss) => {
                     <CardMedia src={calculatedBackdrop()} component="img" />
                     <div className={classes.content}>
                         <div className={classes.tag}>{isTv ? 'TV' : 'Movie'}</div>
+                        {playListToggleElement}
                         <Typography variant={'h2'} className={classes.title}>
                             {title} ({year})
                         </Typography>

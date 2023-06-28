@@ -3,21 +3,33 @@ import { MiniPoster } from "../MediaSourceList/MiniPoster";
 
 import { IconButton, Menu, MenuItem } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { PlaylistSelectionDialog } from '../MediaCard/PlaylistSelectionDialog';
-import { ViewSourceDialog, ViewExternalIdDialog } from '../MediaCard/ViewSourceDialog';
+import { PlaylistSelectionDialog } from './PlaylistSelectionDialog';
+import { ViewSourceDialog, ViewExternalIdDialog } from './ViewSourceDialog';
 import React from "react";
 
-
-export const NewMovieCard = ({ movie }) => {
+interface MovieProps {
+    movie: {
+        id: any,
+        title: string,
+        tmdbId: string,
+        imdbId: string
+        backdropPath: string,
+        itemType: string,
+        posterPath: string,
+        year: string,
+        playlistIds: {
+            playlistId: string
+        }[],
+        tagline: string,
+    },
+    playlistIdentifier?: string
+}
+export const NewMovieCard = ({ movie, playlistIdentifier }: MovieProps) => {
 
     const [showPlaylistSelectionDialog, setShowPlaylistSelectionDialog] = useState(false);
     const [showViewSourceDialog, setShowViewSourceDialog] = useState(false);
     const [showExternalIdDialog, setShowExternalIdDialog] = useState(false);
-    const [anchorEl, setAnchorEl] = useState(null);
-
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
+    const [anchorEl, setAnchorEl] = useState<any>(null);
 
     const handlePlaylistMenuItemClick = () => {
         setAnchorEl(null);
@@ -35,7 +47,7 @@ export const NewMovieCard = ({ movie }) => {
     }
 
     const action = <div>
-        <IconButton onClick={handleClick}>
+        <IconButton onClick={event => setAnchorEl(event.currentTarget)}>
             <MoreVertIcon />
         </IconButton>
         <Menu anchorEl={anchorEl} onClose={() => setAnchorEl(null)} open={Boolean(anchorEl)} >
@@ -77,11 +89,10 @@ export const NewMovieCard = ({ movie }) => {
             posterPath={movie.posterPath}
             title={movie.title}
             year={movie.year}
-            tagline={movie.tagline}
-            mediaItemId={movie.id}
-            playlistIds={movie.playlistIds}
             mode="portrait"
             action={action}
+            currentPlaylistId={playlistIdentifier}
+            mediaId={movie.id}
         />
         {playlistEl}
         {showViewSourceEl}
