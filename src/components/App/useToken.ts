@@ -21,6 +21,7 @@ export default function useToken() {
 
     const saveToken = (t?: LoginModel) => {
         if (!t || t.tokenType === 'none') {
+            localStorage.removeItem('token');
             internalSetToken(null);
         } else {
             const stringifyToken = JSON.stringify(t);
