@@ -29,6 +29,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Login({ setToken }: LoginProps) {
   const classes = useStyles();
+  const handleLogin = (successfull: boolean) => {
+    if (!successfull) throw new Error('invalid....');
+  }
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -51,6 +54,7 @@ export default function Login({ setToken }: LoginProps) {
             const _token = btoa(values.username + ':' + values.password)
             localStorage.basicAuth = _token;
             apiClient('/playlists')
+              .then(d => handleLogin(d.status === 200))
               .then(d => setToken({ tokenType: 'basic', t: _token }))
               .catch(() => localStorage.basicAuth = '')
               .finally(() => setSubmitting(false));
@@ -73,6 +77,6 @@ export default function Login({ setToken }: LoginProps) {
       <Box mt={8}>
         <Copyright />
       </Box>
-    </Container>
+    </Container >
   )
 }

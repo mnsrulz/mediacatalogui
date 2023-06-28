@@ -5,13 +5,14 @@ import Login from '../Login/Login';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Box from '@material-ui/core/Box';
+import { Box } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import Container from '@material-ui/core/Container';
 import MenuIcon from '@material-ui/icons/Menu';
+import LogoutIcon from '@material-ui/icons/AlarmOff';
 
 import { AppRoutes } from '../Routes';
 
@@ -99,7 +100,7 @@ function App() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  
+
   if (!token) {
     return <Login setToken={setToken} />
   }
@@ -121,6 +122,9 @@ function App() {
             <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
               Media Catalog Admin
             </Typography>
+            <IconButton edge="start" color="inherit" aria-label="open drawer" onClick={() => setToken()}>
+              <LogoutIcon />
+            </IconButton>
           </Toolbar>
         </AppBar>
         <BrowserRouter>
@@ -130,10 +134,10 @@ function App() {
             <Container maxWidth="lg" className={classes.container}>
               <Routes>
                 {
-                  AppRoutes.map(r=>{
-                    return <Route path={r.path} 
-                    key={r.sidebarName}
-                    element={<r.component />}/>
+                  AppRoutes.map(r => {
+                    return <Route path={r.path}
+                      key={r.sidebarName}
+                      element={<r.component />} />
                   })
                 }
                 <Route path="/" element={<Navigate replace to="/dashboard" />} />
