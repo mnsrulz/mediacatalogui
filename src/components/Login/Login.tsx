@@ -1,10 +1,12 @@
-import PropTypes from 'prop-types';
 import React from 'react';
-import {Avatar, CssBaseline, Box, Container} from '@material-ui/core';
+import { Avatar, CssBaseline, Box, Container } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import { GoogleLogin } from 'react-google-login';
-import {Copyright} from '../Copyright/Copyright';
+import { Copyright } from '../Copyright/Copyright';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { apiClient } from '../ApiClient/MediaCatalogNetlifyClient';
+import { LoginProps } from '../App/tokenProps';
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -36,20 +38,41 @@ export default function Login({ setToken }: LoginProps) {
         </Avatar>
         <GoogleLogin
           clientId="345350504609-1moo0gfi27h0jj2qaim5ed1iohgprs99.apps.googleusercontent.com"
-          onSuccess={setToken}
-          onFailure={setToken}
+          onSuccess={l => setToken({ tokenType: 'google', t: JSON.stringify(l) })}
+          onFailure={l => setToken({ tokenType: 'none', t: '' })}
           cookiePolicy={'single_host_origin'}
           scope="profile email https://www.googleapis.com/auth/drive"
         />
+
+        <Formik
+          initialValues={{ username: 'test', password: '' }}
+          onSubmit={(values, { setSubmitting }) => {
+            //naive way of authenticating...
+            const _token = btoa(values.username + ':' + values.password)
+            localStorage.basicAuth = _token;
+            apiClient('/playlists')
+              .then(d => setToken({ tokenType: 'basic', t: _token }))
+              .catch(() => localStorage.basicAuth = '')
+              .finally(() => setSubmitting(false));
+          }}
+        >
+          {({ isSubmitting }) => (
+            <Form>
+              <Field name="username" />
+              <ErrorMessage name="username" component="div" />
+              <Field type="password" name="password" />
+              <ErrorMessage name="password" component="div" />
+              <button type="submit" disabled={isSubmitting}>
+                Submit
+              </button>
+            </Form>
+          )}
+        </Formik>
       </div>
 
       <Box mt={8}>
         <Copyright />
       </Box>
-    </Container>    
+    </Container>
   )
-}
-
-type LoginProps = {
-  setToken: (t:any)=>void
 }
