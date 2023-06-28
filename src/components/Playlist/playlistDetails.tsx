@@ -39,7 +39,7 @@ export const PlaylistDetails = ({ playlistId }:PlaylistDetailsProps) => {
                 <Button color='primary' component={Link} to='/playlist'>Playlists</Button>
                 <Typography>{title}</Typography>
             </Breadcrumbs>
-            <MediaCardListComponent items={data} isLoading={loading}></MediaCardListComponent>
+            <MediaCardListComponent items={data} isLoading={loading} playlistIdentifier={playlistId} ></MediaCardListComponent>
         </div>
     );
 };
