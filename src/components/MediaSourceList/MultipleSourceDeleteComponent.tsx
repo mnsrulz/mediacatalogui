@@ -1,6 +1,6 @@
 import { Button, DialogActions } from '@material-ui/core';
 import React, { useState } from 'react';
-import { IconButton } from '@material-ui/core';
+import { IconButton, LinearProgress } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { apiClient } from '../ApiClient/MediaCatalogNetlifyClient'
 import { Dialog, DialogContent, DialogTitle, DialogContentText } from '@material-ui/core';
@@ -13,6 +13,8 @@ type SourceDeleteProps = {
 export default function MultipleSourceDeleteComponent({ mediaSourceIds, onDelete }: SourceDeleteProps) {
 
   const [open, setOpen] = useState(false);
+  const [progress, setProgress] = React.useState(0);
+  const [isProgressBarHidden, setIsProgressBarHidden] = React.useState(true);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -23,10 +25,13 @@ export default function MultipleSourceDeleteComponent({ mediaSourceIds, onDelete
   };
 
   const fxhandleMediaSourceRemove = async () => {
-    mediaSourceIds.forEach(console.log);
+    let counter = 0;
+    setIsProgressBarHidden(false);
     for(const mediaSourceId of mediaSourceIds){
+      setProgress(Math.round((counter++/mediaSourceIds.length) * 100));
       await apiClient.delete(`mediasources/${mediaSourceId}`)
     }
+    setIsProgressBarHidden(true);
     handleClose();
     onDelete();
     
@@ -47,6 +52,7 @@ export default function MultipleSourceDeleteComponent({ mediaSourceIds, onDelete
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
           This will delete the selected media sources permanently. Are you sure you want to delete?
+          <LinearProgress variant="determinate" value={progress} hidden={isProgressBarHidden} />
         </DialogContentText>
       </DialogContent>
       <DialogActions>
