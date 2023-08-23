@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { DataGrid, GridColumns } from '@material-ui/data-grid';
 import { apiClient } from '../ApiClient/MediaCatalogNetlifyClient'
-import { MenuItem } from '@material-ui/core';
+import { MenuItem, IconButton } from '@material-ui/core';
 import SourceType from "./SourceTypeComponent";
 import { MovieFetchComponent } from "./MovieFetchComponent";
 import { InputWithDropdownComponent } from './InputWithDropdownComponent';
 import SourceDeleteComponent from './SourceDeleteComponent';
+import MultipleSourceDeleteComponent from './MultipleSourceDeleteComponent';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
@@ -71,7 +73,10 @@ export const MediaSourceListComponent = () => {
         {
             field: 'id', headerName: ' ', sortable: false, width: 60, renderCell: ({ value }) => {
                 return <SourceDeleteComponent mediaSourceId = {`${value}`}/>
-            }
+            },
+            renderHeader: () => (<MultipleSourceDeleteComponent mediaSourceIds={selectedRows} onDelete={()=>{
+
+            }} />)
         }
     ];
 
@@ -104,6 +109,7 @@ export const MediaSourceListComponent = () => {
         setPendingSelection(value);
     };
 
+    const [selectedRows, setSelectedRows] =  useState<string[]>([]);
     return <div>
         <InputWithDropdownComponent
             pendingSelection={pendingSelection}
@@ -126,10 +132,13 @@ export const MediaSourceListComponent = () => {
             onPageSizeChange={setPageSize}
             loading={loading}
             rowCount={rowCount}
-            checkboxSelection={false}
+            checkboxSelection={true}
             disableColumnMenu
             disableColumnSelector
-            disableSelectionOnClick
+            // disableSelectionOnClick
+            onSelectionModelChange={(ev)=>{
+                setSelectedRows(ev.map(x=>x.toString()));
+            }}
         />
     </div>
 }
