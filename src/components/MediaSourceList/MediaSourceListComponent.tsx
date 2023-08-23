@@ -23,6 +23,7 @@ export const MediaSourceListComponent = () => {
     const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState('');
     const [pendingSelection, setPendingSelection] = useState('Pending');
+    const [random, setRandom] = useState('');
 
     const fxhandleMediaAssignment = async (result: {
         mediaItemId: string; mediaSourceId: string
@@ -72,10 +73,10 @@ export const MediaSourceListComponent = () => {
         { field: 'modified', headerName: 'Last Modified', sortable: false, width: 120, valueFormatter: ({ value }) => dayjs(value?.toString()).fromNow() },
         {
             field: 'id', headerName: ' ', sortable: false, width: 60, renderCell: ({ value }) => {
-                return <SourceDeleteComponent mediaSourceId = {`${value}`}/>
+                return <SourceDeleteComponent mediaSourceId={`${value}`} />
             },
-            renderHeader: () => (<MultipleSourceDeleteComponent mediaSourceIds={selectedRows} onDelete={()=>{
-
+            renderHeader: () => (<MultipleSourceDeleteComponent mediaSourceIds={selectedRows} onDelete={() => {
+                setRandom(`${Math.random()}`);  //to force refresh grid after batch deletion
             }} />)
         }
     ];
@@ -103,13 +104,13 @@ export const MediaSourceListComponent = () => {
             }
         })();
         return () => abortController.abort();
-    }, [page, search, pendingSelection, pageSize]);
+    }, [page, search, pendingSelection, pageSize, random]);
 
     const handlePendingSelectionChange = (value: string) => {
         setPendingSelection(value);
     };
 
-    const [selectedRows, setSelectedRows] =  useState<string[]>([]);
+    const [selectedRows, setSelectedRows] = useState<string[]>([]);
     return <div>
         <InputWithDropdownComponent
             pendingSelection={pendingSelection}
@@ -135,9 +136,9 @@ export const MediaSourceListComponent = () => {
             checkboxSelection={true}
             disableColumnMenu
             disableColumnSelector
-            // disableSelectionOnClick
-            onSelectionModelChange={(ev)=>{
-                setSelectedRows(ev.map(x=>x.toString()));
+            disableSelectionOnClick
+            onSelectionModelChange={(ev) => {
+                setSelectedRows(ev.map(x => x.toString()));
             }}
         />
     </div>
