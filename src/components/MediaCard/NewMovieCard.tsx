@@ -4,7 +4,7 @@ import { MiniPoster } from "../MediaSourceList/MiniPoster";
 import { IconButton, Menu, MenuItem } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { PlaylistSelectionDialog } from './PlaylistSelectionDialog';
-import { ViewSourceDialog, ViewExternalIdDialog } from './ViewSourceDialog';
+import { ViewSourceDialog, ViewExternalIdDialog, RefreshMediaSourcesDialog } from './ViewSourceDialog';
 import React from "react";
 
 interface MovieProps {
@@ -29,6 +29,7 @@ export const NewMovieCard = ({ movie, playlistIdentifier }: MovieProps) => {
     const [showPlaylistSelectionDialog, setShowPlaylistSelectionDialog] = useState(false);
     const [showViewSourceDialog, setShowViewSourceDialog] = useState(false);
     const [showExternalIdDialog, setShowExternalIdDialog] = useState(false);
+    const [showRefreshMediaSourcesDialog, setShowRefreshMediaSourcesDialog]= useState(false);
     const [anchorEl, setAnchorEl] = useState<any>(null);
 
     const handlePlaylistMenuItemClick = () => {
@@ -46,6 +47,11 @@ export const NewMovieCard = ({ movie, playlistIdentifier }: MovieProps) => {
         setShowExternalIdDialog(true);
     }
 
+    const handleRefreshSourcesClick = () => {
+        setAnchorEl(null);
+        setShowRefreshMediaSourcesDialog(true);
+    }
+
     const action = <div>
         <IconButton onClick={event => setAnchorEl(event.currentTarget)}>
             <MoreVertIcon />
@@ -59,6 +65,9 @@ export const NewMovieCard = ({ movie, playlistIdentifier }: MovieProps) => {
             </MenuItem>
             <MenuItem onClick={handleViewExternalIdsClick}>
                 View External Ids
+            </MenuItem>
+            <MenuItem onClick={handleRefreshSourcesClick}>
+                Refresh All Media sources
             </MenuItem>
         </Menu>
     </div>
@@ -82,6 +91,9 @@ export const NewMovieCard = ({ movie, playlistIdentifier }: MovieProps) => {
         onClose={() => { setShowExternalIdDialog(false) }}
     />
 
+    const showRefreshAllMediaSourceEl = <RefreshMediaSourcesDialog open={showRefreshMediaSourcesDialog} mediaId={movie.id} 
+            onClose={() => { setShowRefreshMediaSourcesDialog(false) }}/>
+
 
     return <div>
         <MiniPoster backpath={movie.backdropPath}
@@ -98,5 +110,6 @@ export const NewMovieCard = ({ movie, playlistIdentifier }: MovieProps) => {
         {playlistEl}
         {showViewSourceEl}
         {showViewExternalIdEl}
+        {showRefreshAllMediaSourceEl}
     </div>
 }
