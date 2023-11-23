@@ -55,8 +55,8 @@ export const MediaSourceListComponent = () => {
         {
             field: 'parserInfo', headerName: 'Parser Title', sortable: false, width: 280, renderCell: ({ value, row }) => {
                 return <MovieFetchComponent
-                    value={((value as { title: string }).title) || row.renderedTitle}
-                    isTv={(value as { isTv: boolean }).isTv}
+                    value={((value as { title: string })?.title) || row.renderedTitle}
+                    isTv={(value as { isTv: boolean })?.isTv}
                     mediaSourceId={row.id}
                     mediaItemId={row.mediaItemId}
                     handleMediaAssignment={fxhandleMediaAssignment}

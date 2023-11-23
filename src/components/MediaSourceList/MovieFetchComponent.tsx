@@ -73,6 +73,7 @@ export const MovieFetchComponent: React.FC<FCProps> = ({ value, isTv, mediaSourc
     const [posterUrl, setPosterUrl] = useState('');
     const [title, setTitle] = useState(value);
     const [year, setYear] = useState('');
+    const [imdbId, setImdbId] = useState('');
     const [overview, setOverview] = useState('');
     const [hasResult, setHasResult] = useState(false);
     const [result, setResult] = useState<tmdbresult>();
@@ -166,7 +167,8 @@ export const MovieFetchComponent: React.FC<FCProps> = ({ value, isTv, mediaSourc
         backpath={backdropPath}
         isTv={isTv}
         year={year}
-        posterPath={posterPath} />
+        posterPath={posterPath}
+        imdbId={imdbId} />
 
     const chip = <Chip
         size='medium'

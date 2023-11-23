@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
 import { apiClient } from '../ApiClient/MediaCatalogNetlifyClient';
+import { ImdbRating } from '../ImdbRating/imdbRating';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -44,6 +45,7 @@ const useStyles = makeStyles((theme) => ({
         color: '#fff',
     },
     main: {
+        minHeight: 300,
         maxHeight: 385,
         overflow: 'hidden',
         borderTopLeftRadius: '1.5rem',
@@ -101,13 +103,15 @@ type tsss = {
     title: string,
     year: string,
     currentPlaylistId?: string,
-    mediaId?: string
+    mediaId?: string,
+    imdbId: string
 }
 export const MiniPoster = (props: tsss) => {
-    const { mediaId, action, mode, backpath, posterPath, isTv, title, year, currentPlaylistId } = props;
+    const { mediaId, action, mode, backpath, posterPath, isTv, title, year, currentPlaylistId, imdbId } = props;
     const [isChecked, setIsChecked] = useState(true);
     const classes = useStyles();
     const calculatedBackdrop = () => {
+        if (!posterPath && !backpath) return '';
         if (mode === 'portrait') {
             return `https://image.tmdb.org/t/p/w500${posterPath}`
         }
@@ -118,7 +122,7 @@ export const MiniPoster = (props: tsss) => {
             return `https://image.tmdb.org/t/p/w500${posterPath}`
     }
     const calculatedPosterPath = () => {
-        return `https://image.tmdb.org/t/p/w92${posterPath}`
+        return posterPath ? `https://image.tmdb.org/t/p/w92${posterPath}` : ''
     }
 
     const togglePlaylist = async () => {
@@ -143,9 +147,10 @@ export const MiniPoster = (props: tsss) => {
         <div>
             <Card className={classes.card}>
                 <Box className={classes.main} position={'relative'}>
-                    <CardMedia src={calculatedBackdrop()} component="img" />
+                    <CardMedia loading='lazy' src={calculatedBackdrop()} component="img" />
                     <div className={classes.content}>
                         <div className={classes.tag}>{isTv ? 'TV' : 'Movie'}</div>
+                        <ImdbRating imdbId={imdbId}></ImdbRating>
                         {playListToggleElement}
                         <Typography variant={'h2'} className={classes.title}>
                             {title} ({year})
@@ -154,7 +159,7 @@ export const MiniPoster = (props: tsss) => {
                 </Box>
                 <CardHeader className={classes.author} classes={{
                     content: classes.contentoverride
-                }} avatar={<Avatar src={calculatedPosterPath()} />}
+                }} avatar={<Avatar src={calculatedPosterPath()} imgProps={{ loading: 'lazy' }} />}
                     title={title}
                     subheader={year}
                     titleTypographyProps={{ noWrap: true, gutterBottom: false }}

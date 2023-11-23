@@ -93,6 +93,7 @@ export const NewMovieCard = ({ movie, playlistIdentifier }: MovieProps) => {
             action={action}
             currentPlaylistId={playlistIdentifier}
             mediaId={movie.id}
+            imdbId={movie.imdbId}
         />
         {playlistEl}
         {showViewSourceEl}
