@@ -6,6 +6,14 @@ import { apiClient } from './ApiClient/MediaCatalogNetlifyClient';
 import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, IconButton, LinearProgress, TextField } from '@material-ui/core';
 import { GridColumns, DataGrid } from '@material-ui/data-grid';
 import ShuffleIcon from '@material-ui/icons/Shuffle';
+
+
+
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+dayjs.extend(relativeTime);
+
+
 // Generate Sales Data
 function createData(time: string, amount: number | undefined) {
   return { time, amount };
@@ -42,6 +50,7 @@ export default function Chart() {
   const columns: GridColumns = [
     { field: 'id', headerName: 'Host', flex: 1 },
     { field: 'count', headerName: 'Count', flex: 1, type: 'number' },
+    { field: 'lastCreated', headerName: 'Last', sortable: false, width: 120, valueFormatter: ({ value }) => dayjs(value?.toString()).fromNow() },
     {
       field: 'migrate', headerName: 'Migrate', align: 'right', headerAlign: 'right', sortable: false, width: 120, renderCell: ({ row }) => {
         return <HostMigrateDialog origin={`${row.id}`} count={row.count} onDelete={() => {
