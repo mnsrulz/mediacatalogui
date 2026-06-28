@@ -2,7 +2,7 @@ import axios from 'axios';
 
 function AuthenticatedClient() {
     var _instance = axios.create({
-        baseURL: 'https://mediacatalog.deno.dev/api/'
+        baseURL: 'https://mediacatalog.netlify.app/api/'
     });
     _instance.interceptors.request.use(config => {
         if (localStorage.token && JSON.parse(localStorage.token).tokenId) {
