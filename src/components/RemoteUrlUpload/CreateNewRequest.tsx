@@ -7,6 +7,9 @@ import { apiClient } from '../ApiClient/MediaCatalogNetlifyClient';
 import { TextField, Paper, Typography, Stepper, Step, StepLabel, StepContent, Checkbox, FormControlLabel } from '@material-ui/core';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { useGoogleLogin, googleLogout, useGoogleOneTapLogin } from '@react-oauth/google';
+import { googleScopes } from './../../lib/config'
+import { useToken } from '../../lib/useToken';
 
 function useQuery() {
     return new URLSearchParams(useLocation().search);
@@ -44,7 +47,7 @@ export const CreateNewRequest = () => {
     const mediaId = query.get('mediaId');
     const [activeStep, setActiveStep] = useState(0);
     const [fileUrl, setFileUrl] = useState(query.get('link') || '');
-    const [selectedFiles, setSelectedFiles] = useState([] as {path: string}[]);
+    const [selectedFiles, setSelectedFiles] = useState([] as { path: string }[]);
     const [rawUpload, setRawUpload] = useState(true);
     const fileNameExtension = fileName && fileName.split('.').pop();
 
@@ -77,6 +80,13 @@ export const CreateNewRequest = () => {
         }
     }, [parentUrl]);
 
+    const { access_token, isValid, setToken } = useToken();
+    const login = useGoogleLogin({
+        onSuccess: setToken,
+        flow: 'implicit',
+        scope: googleScopes
+    });
+
     const steps = ['Enter the file URL (any types including zip)', 'Choose Files to Upload', 'Finish'];
 
     function getStepContent(step: number) {
@@ -93,6 +103,8 @@ export const CreateNewRequest = () => {
                         checked={rawUpload}
                         onChange={ev => setRawUpload(ev.target.checked)}
                         disabled={fileNameExtension !== 'zip'} />} label="Raw Upload" />
+                    {isValid ? <Button onClick={() => googleLogout()}>Logout</Button> : <Button onClick={() => login()}>Login</Button>}
+                    {/* <Goo /> */}
                 </div>;
             case 1:
                 return <ChooseFilesToUpload defaultZipFileUrl={fileUrl} onSelectionChange={setSelectedFiles} />;
@@ -103,6 +115,7 @@ export const CreateNewRequest = () => {
                     year={year}
                     rawUpload={rawUpload}
                     fileHeaders={fileHeaders}
+                    accessToken={access_token}
                 />;
             default:
                 return 'unknown step'
@@ -172,4 +185,14 @@ export const CreateNewRequest = () => {
             )}
         </div>
     );
+}
+
+const Goo = () => {
+    useGoogleOneTapLogin({
+        onSuccess: (response) => console.log(response),
+        onError: () => console.log('Login Failed'),
+        auto_select: true,
+    })
+
+    return <div>Goo</div>
 }

@@ -2,7 +2,6 @@ import React from 'react';
 import { Avatar, CssBaseline, Box, Container, Button, TextField, Divider } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
-import { GoogleLogin } from 'react-google-login';
 import { Copyright } from '../Copyright/Copyright';
 import { useFormik } from 'formik';
 import { apiClient } from '../ApiClient/MediaCatalogNetlifyClient';
@@ -54,13 +53,6 @@ export default function Login({ setToken }: LoginProps) {
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
-        <GoogleLogin
-          clientId="345350504609-1moo0gfi27h0jj2qaim5ed1iohgprs99.apps.googleusercontent.com"
-          onSuccess={l => setToken({ tokenType: 'google', t: JSON.stringify(l) })}
-          onFailure={l => setToken({ tokenType: 'none', t: '' })}
-          cookiePolicy={'single_host_origin'}
-          scope="profile email https://www.googleapis.com/auth/drive"
-        />
 
         {/* 
 https://formik.org/docs/examples/with-material-ui

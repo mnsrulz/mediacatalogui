@@ -1,5 +1,6 @@
 import * as React from 'react';
 import './App.css';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Login from '../Login/Login';
 import clsx from 'clsx';
@@ -13,7 +14,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Container from '@material-ui/core/Container';
 import MenuIcon from '@material-ui/icons/Menu';
 import LogoutIcon from '@material-ui/icons/AlarmOff';
-
+import { googleClientId } from './../../lib/config'
 import { AppRoutes } from '../Routes';
 
 import useToken from './useToken';
@@ -105,51 +106,53 @@ function App() {
     return <Login setToken={setToken} />
   }
   return (
+      <GoogleOAuthProvider clientId={googleClientId}>
     <div className="wrapper">
-      <div className={classes.root}>
-        <CssBaseline />
-        <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
-          <Toolbar className={classes.toolbar}>
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              onClick={handleDrawerOpen}
-              className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-              Media Catalog Admin
-            </Typography>
-            <IconButton edge="start" color="inherit" aria-label="open drawer" onClick={() => setToken()}>
-              <LogoutIcon />
-            </IconButton>
-          </Toolbar>
-        </AppBar>
-        <BrowserRouter>
-          <ResponsiveDrawer open={open} handleDrawerClose={handleDrawerClose} hiddenDrawerVariant={hiddenDrawerVariant} />
-          <main className={classes.content}>
-            <div className={classes.appBarSpacer} />
-            <Container maxWidth="lg" className={classes.container}>
-              <Routes>
-                {
-                  AppRoutes.map(r => {
-                    return <Route path={r.path}
-                      key={r.sidebarName}
-                      element={<r.component />} />
-                  })
-                }
-                <Route path="/" element={<Navigate replace to="/dashboard" />} />
-              </Routes>
-              <Box pt={4}>
-                <Copyright />
-              </Box>
-            </Container>
-          </main>
-        </BrowserRouter>
-      </div>
+        <div className={classes.root}>
+          <CssBaseline />
+          <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
+            <Toolbar className={classes.toolbar}>
+              <IconButton
+                edge="start"
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+                Media Catalog Admin
+              </Typography>
+              <IconButton edge="start" color="inherit" aria-label="open drawer" onClick={() => setToken()}>
+                <LogoutIcon />
+              </IconButton>
+            </Toolbar>
+          </AppBar>
+          <BrowserRouter>
+            <ResponsiveDrawer open={open} handleDrawerClose={handleDrawerClose} hiddenDrawerVariant={hiddenDrawerVariant} />
+            <main className={classes.content}>
+              <div className={classes.appBarSpacer} />
+              <Container maxWidth="lg" className={classes.container}>
+                <Routes>
+                  {
+                    AppRoutes.map(r => {
+                      return <Route path={r.path}
+                        key={r.sidebarName}
+                        element={<r.component />} />
+                    })
+                  }
+                  <Route path="/" element={<Navigate replace to="/dashboard" />} />
+                </Routes>
+                <Box pt={4}>
+                  <Copyright />
+                </Box>
+              </Container>
+            </main>
+          </BrowserRouter>
+        </div>
     </div>
+    </GoogleOAuthProvider>
   );
 }
 
