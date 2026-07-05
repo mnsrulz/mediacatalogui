@@ -47,7 +47,7 @@ export const CreateNewRequest = () => {
     const mediaId = query.get('mediaId');
     const [activeStep, setActiveStep] = useState(0);
     const [fileUrl, setFileUrl] = useState(query.get('link') || '');
-    const [selectedFiles, setSelectedFiles] = useState([] as { fileName: string, downloadLink: string }[]);
+    const [selectedFiles, setSelectedFiles] = useState([] as { fileName: string, fileUrl: string }[]);
     const [rawUpload, setRawUpload] = useState(true);
     const fileNameExtension = fileName && fileName.split('.').pop();
 
@@ -124,7 +124,7 @@ export const CreateNewRequest = () => {
     const handleNext = () => {
         if (activeStep === 0 && rawUpload) {
             //put validation
-            setSelectedFiles([{ downloadLink: fileUrl, fileName: fileName }]);
+            setSelectedFiles([{ fileUrl, fileName: fileName }]);
             setActiveStep(2);
         }
         else

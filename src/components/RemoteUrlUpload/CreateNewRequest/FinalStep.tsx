@@ -39,7 +39,7 @@ export const FinalStep = ({ selectedFiles, parentUrl, title, year, mediaType, fi
 }
 
 type FinalStepProps = {
-    selectedFiles: { fileName: string, downloadLink: string }[],
+    selectedFiles: { fileName: string, fileUrl: string }[],
     parentUrl: string,
     title: string,
     year: string,

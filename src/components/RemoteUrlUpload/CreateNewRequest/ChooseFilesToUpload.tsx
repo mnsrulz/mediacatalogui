@@ -28,7 +28,7 @@ export const ChooseFilesToUpload = ({ defaultZipFileUrl, onSelectionChange }: Ch
     }, [defaultZipFileUrl])
 
     const handleSelectionChange = (selectionModel: GridSelectionModel) => {
-        const model = selectionModel.map(x => ({ fileName: data[parseInt(x.toString())].fileName, downloadLink: data[parseInt(x.toString())].downloadLink }));
+        const model = selectionModel.map(x => ({ fileName: data[parseInt(x.toString())].fileName, fileUrl: data[parseInt(x.toString())].downloadLink }));
         onSelectionChange(model);
     }
 
@@ -55,4 +55,4 @@ type ChooseFilesToUploadProps = {
     onSelectionChange: (p: SelectionChangeModel) => void
 }
 
-type SelectionChangeModel = { fileName: string, downloadLink: string }[]
+type SelectionChangeModel = { fileName: string, fileUrl: string }[]
