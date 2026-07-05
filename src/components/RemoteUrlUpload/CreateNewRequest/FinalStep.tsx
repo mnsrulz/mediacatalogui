@@ -3,22 +3,20 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { apiClient } from '../../ApiClient/MediaCatalogNetlifyClient';
 
-export const FinalStep = ({ fileUrl, selectedFiles, parentUrl, title, year, mediaType, rawUpload, fileHeaders, accessToken }: FinalStepProps) => {
+export const FinalStep = ({ selectedFiles, parentUrl, title, year, mediaType, fileHeaders, accessToken }: FinalStepProps) => {
     const [error, setError] = useState('');
     const [isLoaded, setIsLoaded] = useState(false);
     const [requestId, setRequestId] = useState();
     useEffect(() => {
         (async () => {
-            const files = selectedFiles.map(i => i.path);
             const payload = {
-                fileUrl,
                 parentUrl,
-                files,
+                files: selectedFiles,
                 title,
                 year,
                 mediaType,
                 accessToken,
-                rawUpload,
+                rawUpload: true,
                 fileUrlHeaders: fileHeaders
             };
             try {
@@ -29,7 +27,7 @@ export const FinalStep = ({ fileUrl, selectedFiles, parentUrl, title, year, medi
                 setError(e.message);
             }
         })();
-    }, [selectedFiles, fileUrl]);
+    }, [selectedFiles]);
 
     if (error) {
         return <div>Error: {error}</div>;
@@ -41,10 +39,11 @@ export const FinalStep = ({ fileUrl, selectedFiles, parentUrl, title, year, medi
 }
 
 type FinalStepProps = {
-    fileUrl: string,
-    selectedFiles: { path: string }[],
-    parentUrl: string, title: string,
+    selectedFiles: { fileName: string, downloadLink: string }[],
+    parentUrl: string,
+    title: string,
     year: string,
-    mediaType: string, rawUpload: boolean, fileHeaders: Record<string, string>,
+    mediaType: string,
+    fileHeaders: Record<string, string>,
     accessToken: string
 }

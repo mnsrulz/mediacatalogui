@@ -5,33 +5,32 @@ import axios from 'axios';
 
 export const ChooseFilesToUpload = ({ defaultZipFileUrl, onSelectionChange }: ChooseFilesToUploadProps) => {
     const [isLoading, setIsLoading] = useState(true);
-    const [data, setData] = useState([] as {id: string}[]);
+    const [data, setData] = useState([] as { id: number, fileName: string, downloadLink: string }[]);
     const [error, setError] = useState('');
 
     const columns: GridColumns = [
-        { field: 'path', headerName: 'Path', minWidth: 400, flex: 1 },
+        { field: 'fileName', headerName: 'Path', minWidth: 400, flex: 1 },
         { field: 'uncompressedSize', headerName: 'Size', width: 100, valueFormatter: ({ value }) => prettyBytes(parseInt(value?.toString() || '0')) },
     ];
 
     useEffect(() => {
         (async () => {
-            const fetchUrl = `https://zipservice.netlify.app/.netlify/functions/server/list?q=${encodeURIComponent(defaultZipFileUrl)}`;
-            
+            const fetchUrl = ` https://zipservice.mztrading.workers.dev/files?u=${encodeURIComponent(defaultZipFileUrl)}`;
             try {
-                const response = await axios.get<{path:string}[]>(fetchUrl);
-                const mappedResult = response.data.map(x => ({ ...x, id: x.path }));
+                const response = await axios.get<{ fileName: string, downloadLink: string }[]>(fetchUrl);
+                const mappedResult = response.data.filter(k => Boolean(k.downloadLink)).map((x, ix) => ({ ...x, id: ix }));
                 setData(mappedResult);
                 setIsLoading(false);
-            } catch (error) {
+            } catch (error: Error | any) {
                 setError(error.message);
             }
         })()
     }, [defaultZipFileUrl])
 
-const handleSelectionChange = (selectionModel: GridSelectionModel)=>{
-    const model = selectionModel.map(x=>({path: x.toString()}));
-    onSelectionChange(model);
-}
+    const handleSelectionChange = (selectionModel: GridSelectionModel) => {
+        const model = selectionModel.map(x => ({ fileName: data[parseInt(x.toString())].fileName, downloadLink: data[parseInt(x.toString())].downloadLink }));
+        onSelectionChange(model);
+    }
 
     if (error) {
         return <div> Error: We have some errrors </div>;
@@ -56,4 +55,4 @@ type ChooseFilesToUploadProps = {
     onSelectionChange: (p: SelectionChangeModel) => void
 }
 
-type SelectionChangeModel = { path: string }[]
+type SelectionChangeModel = { fileName: string, downloadLink: string }[]

@@ -47,7 +47,7 @@ export const CreateNewRequest = () => {
     const mediaId = query.get('mediaId');
     const [activeStep, setActiveStep] = useState(0);
     const [fileUrl, setFileUrl] = useState(query.get('link') || '');
-    const [selectedFiles, setSelectedFiles] = useState([] as { path: string }[]);
+    const [selectedFiles, setSelectedFiles] = useState([] as { fileName: string, downloadLink: string }[]);
     const [rawUpload, setRawUpload] = useState(true);
     const fileNameExtension = fileName && fileName.split('.').pop();
 
@@ -109,11 +109,10 @@ export const CreateNewRequest = () => {
             case 1:
                 return <ChooseFilesToUpload defaultZipFileUrl={fileUrl} onSelectionChange={setSelectedFiles} />;
             case 2:
-                return <FinalStep selectedFiles={selectedFiles} fileUrl={fileUrl} parentUrl={parentUrl}
+                return <FinalStep selectedFiles={selectedFiles} parentUrl={parentUrl}
                     mediaType={mediaType}
                     title={title}
                     year={year}
-                    rawUpload={rawUpload}
                     fileHeaders={fileHeaders}
                     accessToken={access_token}
                 />;
@@ -125,7 +124,7 @@ export const CreateNewRequest = () => {
     const handleNext = () => {
         if (activeStep === 0 && rawUpload) {
             //put validation
-            setSelectedFiles([{ path: fileName }]);
+            setSelectedFiles([{ downloadLink: fileUrl, fileName: fileName }]);
             setActiveStep(2);
         }
         else
