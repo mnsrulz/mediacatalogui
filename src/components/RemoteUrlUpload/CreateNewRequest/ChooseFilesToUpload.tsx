@@ -5,7 +5,7 @@ import axios from 'axios';
 
 export const ChooseFilesToUpload = ({ defaultZipFileUrl, onSelectionChange }: ChooseFilesToUploadProps) => {
     const [isLoading, setIsLoading] = useState(true);
-    const [data, setData] = useState([] as { id: number, fileName: string, downloadLink: string }[]);
+    const [data, setData] = useState([] as { id: number, fileName: string, downloadLink: string, uncompressedSize: number }[]);
     const [error, setError] = useState('');
 
     const columns: GridColumns = [
@@ -17,7 +17,7 @@ export const ChooseFilesToUpload = ({ defaultZipFileUrl, onSelectionChange }: Ch
         (async () => {
             const fetchUrl = ` https://zipservice.mztrading.workers.dev/files?u=${encodeURIComponent(defaultZipFileUrl)}`;
             try {
-                const response = await axios.get<{ fileName: string, downloadLink: string }[]>(fetchUrl);
+                const response = await axios.get<{ fileName: string, downloadLink: string, uncompressedSize: number }[]>(fetchUrl);
                 const mappedResult = response.data.filter(k => Boolean(k.downloadLink)).map((x, ix) => ({ ...x, id: ix }));
                 setData(mappedResult);
                 setIsLoading(false);
@@ -28,7 +28,11 @@ export const ChooseFilesToUpload = ({ defaultZipFileUrl, onSelectionChange }: Ch
     }, [defaultZipFileUrl])
 
     const handleSelectionChange = (selectionModel: GridSelectionModel) => {
-        const model = selectionModel.map(x => ({ fileName: data[parseInt(x.toString())].fileName, fileUrl: data[parseInt(x.toString())].downloadLink }));
+        const model = selectionModel.map(x => ({
+            fileName: data[parseInt(x.toString())].fileName,
+            fileUrl: data[parseInt(x.toString())].downloadLink,
+            fileSize: data[parseInt(x.toString())].uncompressedSize
+        }));
         onSelectionChange(model);
     }
 
@@ -55,4 +59,4 @@ type ChooseFilesToUploadProps = {
     onSelectionChange: (p: SelectionChangeModel) => void
 }
 
-type SelectionChangeModel = { fileName: string, fileUrl: string }[]
+type SelectionChangeModel = { fileName: string, fileUrl: string, fileSize: number }[]
