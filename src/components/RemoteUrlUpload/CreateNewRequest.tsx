@@ -4,7 +4,7 @@ import Button from "@material-ui/core/Button";
 import { ChooseFilesToUpload } from './CreateNewRequest/ChooseFilesToUpload';
 import { FinalStep } from './CreateNewRequest/FinalStep';
 import { apiClient } from '../ApiClient/MediaCatalogNetlifyClient';
-import { TextField, Paper, Typography, Stepper, Step, StepLabel, StepContent, Checkbox, FormControlLabel } from '@material-ui/core';
+import { TextField, Paper, Typography, Stepper, Step, StepLabel, StepContent, Checkbox, FormControlLabel, Select, MenuItem, InputLabel, FormControl } from '@material-ui/core';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { useGoogleLogin, googleLogout, useGoogleOneTapLogin } from '@react-oauth/google';
@@ -39,9 +39,9 @@ export const CreateNewRequest = () => {
     const [fileName, setFileName] = useState(query.get('fileName') || '');
     const [parentUrl, setParentUrl] = useState(query.get('parent') || '');
 
-    const [mediaType, setMediaType] = useState('');
+    const [mediaType, setMediaType] = useState('movie');
     const [title, setTitle] = useState('');
-    const [year, setYear] = useState('');
+    const [year, setYear] = useState(new Date().getFullYear().toString());
     const [fileHeaders, setFileHeaders] = useState({});
 
     const mediaId = query.get('mediaId');
@@ -94,10 +94,25 @@ export const CreateNewRequest = () => {
             case 0:
                 return <div>
                     <TextField name="fileUrl" type="URL" defaultValue={fileUrl} fullWidth onChange={e => setFileUrl(e.target.value)} />
-                    <p>Parent: {parentUrl}</p>
-                    <p>Media Type: {mediaType}</p>
-                    <p>Title: {title}</p>
-                    <p>Year: {year}</p>
+                    <TextField name="parentUrl" label="Parent URL" defaultValue={parentUrl} fullWidth onChange={e => setParentUrl(e.target.value)} />
+                    <TextField name="title" label="Title" defaultValue={title} fullWidth onChange={e => setTitle(e.target.value)} />
+                    <div style={{ display: 'flex', gap: 16 }}>
+                        <FormControl fullWidth>
+                            <InputLabel>Media Type</InputLabel>
+                            <Select name="mediaType" value={mediaType} onChange={e => setMediaType(e.target.value as string)}>
+                                <MenuItem value="movie">Movie</MenuItem>
+                                <MenuItem value="tv">TV</MenuItem>
+                            </Select>
+                        </FormControl>
+                        <FormControl fullWidth>
+                            <InputLabel>Year</InputLabel>
+                            <Select name="year" value={year} onChange={e => setYear(e.target.value as string)}>
+                                {Array.from({ length: new Date().getFullYear() + 5 - 1900 + 1 }, (_, i) => 1900 + i).map(y => (
+                                    <MenuItem key={y} value={y.toString()}>{y}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </div>
                     <p>{JSON.stringify(fileHeaders)}</p>
                     <FormControlLabel control={<Checkbox name="rawUpload"
                         checked={rawUpload}
