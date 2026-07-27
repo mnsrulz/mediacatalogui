@@ -8,7 +8,8 @@ import { TextField, Paper, Typography, Stepper, Step, StepLabel, StepContent, Ch
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { useGoogleLogin, googleLogout, useGoogleOneTapLogin } from '@react-oauth/google';
-import { googleScopes } from './../../lib/config'
+import { googleScopes } from './../../lib/config';
+import prettyBytes from 'pretty-bytes';
 import { useToken } from '../../lib/useToken';
 
 function useQuery() {
@@ -49,6 +50,8 @@ export const CreateNewRequest = () => {
     const [fileUrl, setFileUrl] = useState(query.get('link') || '');
     const [selectedFiles, setSelectedFiles] = useState([] as { fileName: string, fileUrl: string, fileSize: number }[]);
     const [rawUpload, setRawUpload] = useState(true);
+    const [validationResult, setValidationResult] = useState<{ size: number | null, fileName: string | null, acceptsRanges: boolean, status: number } | null>(null);
+    const [validating, setValidating] = useState(false);
     const fileNameExtension = fileName && fileName.split('.').pop();
 
     useEffect(() => {
@@ -93,9 +96,32 @@ export const CreateNewRequest = () => {
         switch (step) {
             case 0:
                 return <div>
-                    <TextField name="fileUrl" type="URL" defaultValue={fileUrl} fullWidth onChange={e => setFileUrl(e.target.value)} />
+                    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                        <TextField name="fileUrl" type="URL" defaultValue={fileUrl} fullWidth onChange={e => setFileUrl(e.target.value)} />
+                        {rawUpload && <Button variant="outlined" disabled={validating} onClick={async () => {
+                            setValidating(true);
+                            try {
+                                const response = await apiClient.post('validate-url', { fileUrl, fileUrlHeaders: fileHeaders });
+                                const { fileName: validatedFileName } = response.data;
+                                const fallbackName = fileUrl.split('/').pop() || '';
+                                if (validatedFileName) setFileName(validatedFileName);
+                                setTitle(validatedFileName || fallbackName);
+                                setValidationResult(response.data);
+                            } catch (e: any) {
+                                setValidationResult({ size: null, fileName: null, acceptsRanges: false, status: e?.response?.status || 0 });
+                            }
+                            setValidating(false);
+                        }}>{validating ? 'Validating...' : 'Validate'}</Button>}
+                    </div>
+                    {validationResult && (
+                        <div style={{ fontSize: '0.85em', marginTop: 4, color: validationResult.status >= 400 ? 'red' : 'inherit' }}>
+                            {validationResult.status >= 400
+                                ? `Validation failed (status ${validationResult.status})`
+                                : `Size: ${validationResult.size != null ? prettyBytes(validationResult.size) : 'unknown'} | ${validationResult.acceptsRanges ? 'Range-supported' : 'No range'} | File: ${validationResult.fileName || 'unknown'}`}
+                        </div>
+                    )}
                     <TextField name="parentUrl" label="Parent URL" defaultValue={parentUrl} fullWidth onChange={e => setParentUrl(e.target.value)} />
-                    <TextField name="title" label="Title" defaultValue={title} fullWidth onChange={e => setTitle(e.target.value)} />
+                    <TextField name="title" label="Title" value={title} fullWidth onChange={e => setTitle(e.target.value)} />
                     <div style={{ display: 'flex', gap: 16 }}>
                         <FormControl fullWidth>
                             <InputLabel>Media Type</InputLabel>
@@ -136,10 +162,11 @@ export const CreateNewRequest = () => {
         }
     }
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (activeStep === 0 && rawUpload) {
-            //put validation
-            setSelectedFiles([{ fileUrl, fileName, fileSize: 0 }]);
+            const response = await apiClient.post('validate-url', { fileUrl, fileUrlHeaders: fileHeaders });
+            const { size, fileName: validatedFileName } = response.data;
+            setSelectedFiles([{ fileUrl, fileName: validatedFileName || fileName, fileSize: size || 0 }]);
             setActiveStep(2);
         }
         else
